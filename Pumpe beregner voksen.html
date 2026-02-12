@@ -87,7 +87,7 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <div>
 <strong>Basal Rate:</strong> <span id="basalRate"></span> IE/time<br>
 <strong>Insulinfølsomhed (ISF):</strong> <span id="isf"></span> mmol/L per IE<br>
-<strong>Insulin kulhydrat ratio (ICR):</strong> <span id="icr"></span> g/IE
+<strong>Kulhydratratio (ICR):</strong> <span id="icr"></span> g/IE
 </div>
 
 <div id="pumpFieldsContainer"></div>
@@ -122,7 +122,7 @@ const pumps = {
 medtronic780g: {
 name:"Medtronic 780G",
 fields:[
-{type:"select",id:"target",label:"Glukosemål",options:[5.5,6.1,6.5]},
+{type:"select",id:"target",label:"Glukosemål (mmol/l)",options:[5.5,6.1,6.5]},
 {type:"number",id:"ait",label:"Aktiv insulintid (2–5 timer)",min:2,max:5,step:0.5},
 {type:"checkbox",id:"auto",label:"Autokorrektion aktiv"}
 ]
@@ -139,16 +139,16 @@ name:"YpsoPump",
 fields:[
 {type:"display",id:"tddi",label:"Total daglig insulin"},
 {type:"number",id:"weight",label:"Kropsvægt (kg)",step:0.1},
-{type:"select",id:"target",label:"Glukosemål",options:[5.5,6.0,6.5]},
+{type:"select",id:"target",label:"Glukosemål (mmol/l)",options:[5.5,6.0,6.5]},
 {type:"number",id:"ait",label:"Aktiv insulintid (2–5 timer)",min:2,max:5,step:0.5}
 ]
 },
 omnipod5:{
 name:"Omnipod 5",
 fields:[
-{type:"select",id:"target",label:"Glukosemål",options:[6.1,6.7,7.3,7.8,8.3]},
+{type:"select",id:"target",label:"Glukosemål (mmol/l)",options:[6.1,6.7,7.3,7.8,8.3]},
 {type:"checkbox",id:"reverse",label:"Omvendt korrektion aktiv"},
-{type:"number",id:"minGlucose",label:"Minimum blodsukker for beregning",step:0.1}
+{type:"number",id:"minGlucose",label:"Minimum blodsukker for beregning (ofte det samme som Glukosemål)",step:0.1}
 ]
 }
 };
@@ -239,8 +239,8 @@ function copyToJournal(){
 let text="Insulinpumpe opstart\n";
 text+="Pumpe: "+pumpTitle.textContent+"\n\n";
 text+="Basalrate: "+basalRateOutput.textContent+" IE/time\n";
-text+="ISF: "+isfOutput.textContent+" mmol/L per IE\n";
-text+="ICR: "+icrOutput.textContent+" g/IE\n\n";
+text+="Insulinfølsomhed (ISF): "+isfOutput.textContent+" mmol/L per IE\n";
+text+="Kulhydratratio (ICR): "+icrOutput.textContent+" g/IE\n\n";
 
 const key=pumpModel.value;
 if(!pumps[key]) return;
@@ -280,4 +280,5 @@ document.getElementById("copyButton").addEventListener("click",copyToJournal);
 </script>
 </body>
 </html>
+
 
