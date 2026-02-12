@@ -2,20 +2,27 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Pumpe Beregner Voksen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pumpeberegner Voksen</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Pumpe Beregner Voksen</h1>
+    <h1>Pumpeberegner Voksen</h1>
+    <form id="pump-form">
+        <label for="tdi">TDI:</label>
+        <input type="number" id="tdi" name="tdi" required>
+        <button type="submit">Beregn</button>
+    </form>
+    <div id="result">
+        <p>Adjusted Value: <span id="tddi"></span></p>
+    </div>
     <script>
-        function beregnPumpe(tdi) {
-            // calculate adjusted value
+        document.getElementById('pump-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let tdi = parseFloat(document.getElementById('tdi').value);
             const adjusted = (tdi * 0.8);
-
-            // other calculations using adjusted
-            let output = `Adjusted value: ${adjusted.toFixed(0)}`;
-            document.getElementById('output').innerText = output;
-        }
+            document.getElementById("tddi").textContent=adjusted.toFixed(1);
+        });
     </script>
-    <div id='output'></div>
 </body>
 </html>
