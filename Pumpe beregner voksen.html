@@ -224,7 +224,7 @@ pumpFieldsContainer.innerHTML="";
 return;
 }
 
-const adjusted=tdi*0.8;
+const adjusted=(tdi*0.8).toFixed(0);
 basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(1);
 isfOutput.textContent=(100/adjusted).toFixed(0);
 icrOutput.textContent=(500/adjusted).toFixed(0);
@@ -281,6 +281,7 @@ document.getElementById("copyButton").addEventListener("click",copyToJournal);
 </script>
 </body>
 </html>
+
 
 
 
