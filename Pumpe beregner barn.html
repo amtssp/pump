@@ -78,7 +78,7 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <option value="omnipod5">Omnipod 5</option>
 </select>
 
-<div class="note"> <strong>Info om beregninger:</strong><br> Pen-dosering reduceres med 20% dernæst forudsættes en fordeling på 40/60 (basal/bolus). Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes 100-reglen. For Insulin kulhydrat ratio benyttes 450-reglen </div>
+<div class="note"> <strong>Info om beregninger:</strong><br> Pen-dosering reduceres med 20% dernæst forudsættes en <b>fordeling på 40/60 (basal/bolus)</b>b>. Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes 100-reglen. For Insulin kulhydrat ratio benyttes <b>450-reglen</b>b> </div>
 
 <div class="results">
 <h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
@@ -121,7 +121,7 @@ const pumps = {
 medtronic780g: {
 name:"Medtronic 780G",
 fields:[
-{type:"select",id:"target",label:"Glukosemål",options:[5.5,6.1,6.5]},
+{type:"select",id:"target",label:"Glukosemål (mmol/l)",options:[5.5,6.1,6.5]},
 {type:"number",id:"ait",label:"Aktiv insulintid (2–5 timer)",min:2,max:5,step:0.5},
 {type:"checkbox",id:"auto",label:"Autokorrektion aktiv"}
 ]
@@ -138,14 +138,14 @@ name:"YpsoPump",
 fields:[
 {type:"display",id:"tddi",label:"Total daglig insulin"},
 {type:"number",id:"weight",label:"Kropsvægt (kg)",step:0.1},
-{type:"select",id:"target",label:"Glukosemål",options:[5.5,6.0,6.5]},
+{type:"select",id:"target",label:"Glukosemål (mmol/l)",options:[5.5,6.0,6.5]},
 {type:"number",id:"ait",label:"Aktiv insulintid (2–5 timer)",min:2,max:5,step:0.5}
 ]
 },
 omnipod5:{
 name:"Omnipod 5",
 fields:[
-{type:"select",id:"target",label:"Glukosemål",options:[6.1,6.7,7.3,7.8,8.3]},
+{type:"select",id:"target",label:"Glukosemål (mmol/l)",options:[6.1,6.7,7.3,7.8,8.3]},
 {type:"checkbox",id:"reverse",label:"Omvendt korrektion aktiv"},
 {type:"number",id:"minGlucose",label:"Minimum blodsukker for beregning",step:0.1}
 ]
@@ -279,5 +279,6 @@ document.getElementById("copyButton").addEventListener("click",copyToJournal);
 </script>
 </body>
 </html>
+
 
 
