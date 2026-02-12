@@ -78,7 +78,7 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <option value="omnipod5">Omnipod 5</option>
 </select>
 
-<div class="note"> <strong>Info om beregninger:</strong><br> Pen-dosering reduceres med 20% dernæst forudsættes en fordeling på 40/60 (basal/bolus). Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes 100-reglen. For Insulin kulhydrat ratio benyttes 350-reglen </div>
+<div class="note"> <strong>Info om beregninger:</strong><br> Pen-dosering reduceres med 20% dernæst forudsættes en fordeling på 40/60 (basal/bolus). Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes 100-reglen. For Insulin kulhydrat ratio benyttes 450-reglen </div>
 
 <div class="results">
 <h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
@@ -86,7 +86,7 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <div>
 <strong>Basal Rate:</strong> <span id="basalRate"></span> IE/time<br>
 <strong>Insulinfølsomhed (ISF):</strong> <span id="isf"></span> mmol/L per IE<br>
-<strong>Insulin kulhydrat ratio (ICR):</strong> <span id="icr"></span> g/IE
+<strong>Kulhydratratio (ICR):</strong> <span id="icr"></span> g/IE
 </div>
 
 <div id="pumpFieldsContainer"></div>
@@ -225,7 +225,7 @@ return;
 const adjusted=tdi*0.8;
 basalRateOutput.textContent=((adjusted*0.4)/24).toFixed(1);
 isfOutput.textContent=(100/adjusted).toFixed(1);
-icrOutput.textContent=(350/adjusted).toFixed(1);
+icrOutput.textContent=(450/adjusted).toFixed(1);
 
 showPumpFields(pumpModel.value);
 
@@ -238,8 +238,8 @@ function copyToJournal(){
 let text="Insulinpumpe opstart\n";
 text+="Pumpe: "+pumpTitle.textContent+"\n\n";
 text+="Basalrate: "+basalRateOutput.textContent+" IE/time\n";
-text+="ISF: "+isfOutput.textContent+" mmol/L per IE\n";
-text+="ICR: "+icrOutput.textContent+" g/IE\n\n";
+text+="Insulinfølsomheds Faktor (ISF): "+isfOutput.textContent+" mmol/L per IE\n";
+text+="Kulhydratratio (ICR): "+icrOutput.textContent+" g/IE\n\n";
 
 const key=pumpModel.value;
 if(!pumps[key]) return;
@@ -279,4 +279,5 @@ document.getElementById("copyButton").addEventListener("click",copyToJournal);
 </script>
 </body>
 </html>
+
 
