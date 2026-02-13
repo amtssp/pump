@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bariatrisk beregner</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 40px;
+}
+
+.container {
+    max-width: 850px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+h1 {
+    margin-top: 0;
+}
+
+h2 {
+    margin-top: 30px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    align-items: center;
+    padding: 6px;
+    border-radius: 4px;
+}
+
+.row label {
+    flex: 1;
+}
+
+.row input {
+    width: 140px;
+    padding: 6px;
+}
+
+.result {
+    font-weight: bold;
+    min-width: 260px;
+    text-align: right;
+}
+
+.divider {
+    margin: 25px 0;
+    border-top: 2px solid #ccc;
+}
+
+.success {
+    background-color: #d4edda;
+}
+
+.fail {
+    background-color: #f8d7da;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Bariatrisk beregner</h1>
+
+<h2>BMI beregningsark til bariatrisk kirurgi</h2>
+
+<div class="row">
+    <label>Højde (cm):</label>
+    <input type="number" id="height" oninput="calculate()" step="0.1">
+</div>
+
+<div class="row">
+    <label>Vægt ved start (kg):</label>
+    <input type="number" id="weightStart" oninput="calculate()" step="0.1">
+</div>
+
+<div class="row">
+    <label>Vægt efter 2 år (kg):</label>
+    <input type="number" id="weight2yr" oninput="calculate()" step="0.1">
+</div>
+
+<div class="divider"></div>
+
+<h2>Til brug ved indstilling til bariatrisk kirurgi</h2>
+
+<div class="row">
+    <label>BMI ved start:</label>
+    <div class="result" id="bmiStart"></div>
+</div>
+
+<div class="row">
+    <label>Målvægt (8% vægttab):</label>
+    <div class="result" id="target8"></div>
+</div>
+
+<div class="row">
+    <label>Målvægt (10% vægttab):</label>
+    <div class="result" id="target10"></div>
+</div>
+
+<h2>Til brug ved indstilling til plastikkirurgi (2-års kontrol)</h2>
+
+<div class="row" id="bmi2yrRow">
+    <label>BMI efter 2 år:</label>
+    <div class="result" id="bmi2yr"></div>
+</div>
+
+<div class="row" id="deltaBMIRow">
+    <label>Delta BMI:</label>
+    <div class="result" id="deltaBMI"></div>
+</div>
+
+<div class="row">
+    <label>Beregnet vægt for BMI = 30:</label>
+    <div class="result" id="weightBMI30"></div>
+</div>
+
+<div class="row">
+    <label>Beregnet vægt for delta BMI ≥ 15:</label>
+    <div class="result" id="weightDelta15"></div>
+</div>
+
+<div class="row">
+    <label>Beregnet vægt for BMI = 25:</label>
+    <div class="result" id="weightBMI25"></div>
+</div>
+
+</div>
+
+<script>
+function calculate() {
+
+    const heightCm = parseFloat(document.getElementById("height").value);
+    const weightStart = parseFloat(document.getElementById("weightStart").value);
+    const weight2yr = parseFloat(document.getElementById("weight2yr").value);
+
+    if (!heightCm || heightCm <= 0) return;
+
+    const heightM = heightCm / 100;
+    const heightSquared = heightM * heightM;
+
+    let bmiStart = null;
+    let bmi2yr = null;
+
+    // BMI ved start
+    if (weightStart && weightStart > 0) {
+
+        bmiStart = weightStart / heightSquared;
+        document.getElementById("bmiStart").innerText =
+            bmiStart.toFixed(1) + " kg/m²";
+
+        document.getElementById("target8").innerText =
+            (0.92 * weightStart).toFixed(1) + " kg";
+
+        document.getElementById("target10").innerText =
+            (0.90 * weightStart).toFixed(1) + " kg";
+
+        document.getElementById("weightBMI30").innerText =
+            (30 * heightSquared).toFixed(1) + " kg";
+
+        document.getElementById("weightBMI25").innerText =
+            (25 * heightSquared).toFixed(1) + " kg";
+
+        const targetBMIforDelta15 = bmiStart - 15;
+        if (targetBMIforDelta15 > 0) {
+            document.getElementById("weightDelta15").innerText =
+                (targetBMIforDelta15 * heightSquared).toFixed(1) + " kg";
+        }
+    }
+
+    // BMI efter 2 år
+    const bmi2yrRow = document.getElementById("bmi2yrRow");
+    bmi2yrRow.classList.remove("success", "fail");
+
+    if (weight2yr && weight2yr > 0) {
+
+        bmi2yr = weight2yr / heightSquared;
+        const bmi2yrRounded = bmi2yr.toFixed(1);
+
+        if (bmi2yr <= 30) {
+            document.getElementById("bmi2yr").innerText =
+                bmi2yrRounded + " kg/m² – Krav opfyldt";
+            bmi2yrRow.classList.add("success");
+        } else {
+            document.getElementById("bmi2yr").innerText =
+                bmi2yrRounded + " kg/m² – Krav ikke opfyldt";
+            bmi2yrRow.classList.add("fail");
+        }
+    } else {
+        document.getElementById("bmi2yr").innerText = "";
+    }
+
+    // Delta BMI
+    const deltaRow = document.getElementById("deltaBMIRow");
+    deltaRow.classList.remove("success", "fail");
+
+    if (bmiStart && bmi2yr) {
+
+        const delta = bmiStart - bmi2yr;
+        const deltaRounded = delta.toFixed(1);
+
+        if (delta >= 15) {
+            document.getElementById("deltaBMI").innerText =
+                deltaRounded + " kg/m² – Krav opfyldt";
+            deltaRow.classList.add("success");
+        } else {
+            document.getElementById("deltaBMI").innerText =
+                deltaRounded + " kg/m² – Krav ikke opfyldt";
+            deltaRow.classList.add("fail");
+        }
+    } else {
+        document.getElementById("deltaBMI").innerText = "";
+    }
+}
+</script>
+
+</body>
+</html>
