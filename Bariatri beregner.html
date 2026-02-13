@@ -219,34 +219,36 @@ function calculate() {
     } else {
         document.getElementById("bmi2yr").innerText = "";
     }
+// Delta BMI
+const deltaRow = document.getElementById("deltaBMIRow");
+deltaRow.classList.remove("success", "fail");
 
-    // Delta BMI
-    const deltaRow = document.getElementById("deltaBMIRow");
-    deltaRow.classList.remove("success", "fail");
+if (bmiStart && bmi2yr) {
 
-    if (bmiStart && bmi2yr) {
+    // Rund først til 1 decimal numerisk
+    const delta = bmiStart - bmi2yr;
+    const deltaRoundedNumeric = Math.round(delta * 10) / 10;
 
-        const delta = bmiStart - bmi2yr;
-        const deltaRounded = delta.toFixed(1);
-
-        if (delta >= 15) {
-            document.getElementById("deltaBMI").innerText =
-                deltaRounded + " kg/m² – Krav opfyldt";
-            deltaRow.classList.add("success");
-        } else {
-            document.getElementById("deltaBMI").innerText =
-                deltaRounded + " kg/m² – Krav ikke opfyldt";
-            deltaRow.classList.add("fail");
-        }
+    if (deltaRoundedNumeric >= 15) {
+        document.getElementById("deltaBMI").innerText =
+            deltaRoundedNumeric.toFixed(1) + " kg/m² – Krav opfyldt";
+        deltaRow.classList.add("success");
     } else {
-        document.getElementById("deltaBMI").innerText = "";
+        document.getElementById("deltaBMI").innerText =
+            deltaRoundedNumeric.toFixed(1) + " kg/m² – Krav ikke opfyldt";
+        deltaRow.classList.add("fail");
     }
+} else {
+    document.getElementById("deltaBMI").innerText = "";
 }
+
+
 </script>
 
 </body>
 
 </html>
+
 
 
 
