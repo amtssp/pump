@@ -196,4 +196,82 @@ pumpFieldsContainer.appendChild(wrap);
 }
 
 /* =====================================================
-   Beregn
+   Beregning (BARN-logik)
+===================================================== */
+function calculate(){
+const tdi=parseFloat(tdiInput.value);
+if(!pumpSwitch.checked||!tdi||pumpModel.value===""){
+basalRateOutput.textContent="";
+isfOutput.textContent="";
+icrOutput.textContent="";
+pumpTitle.textContent="Pumpespecifikke indstillinger";
+pumpFieldsContainer.innerHTML="";
+return;
+}
+
+const adjusted=tdi*0.8;
+
+basalRateOutput.textContent=((adjusted*0.4)/24).toFixed(1);
+isfOutput.textContent=(100/adjusted).toFixed(1);
+icrOutput.textContent=(450/adjusted).toFixed(1);
+
+showPumpFields(pumpModel.value);
+
+if(document.getElementById("tddi")){
+document.getElementById("tddi").textContent=adjusted.toFixed(1);
+}
+}
+
+/* =====================================================
+   Kopiér til journal
+===================================================== */
+function copyToJournal(){
+let text="Insulinpumpe opstart\n";
+text+="Pumpe: "+pumpTitle.textContent+"\n\n";
+text+="Basalrate: "+basalRateOutput.textContent+" IE/time\n";
+text+="Insulinfølsomheds Faktor (ISF): "+isfOutput.textContent+" mmol/L per IE\n";
+text+="Kulhydratratio (ICR): "+icrOutput.textContent+" g/IE\n\n";
+
+const key=pumpModel.value;
+if(!pumps[key]) return;
+
+pumps[key].fields.forEach(f=>{
+const el=document.getElementById(f.id);
+if(!el) return;
+
+if(f.type==="number"||f.type==="select"){
+let v=el.value;
+if(!v||isNaN(parseFloat(v))){
+text+=f.label+": skal udfyldes senere\n";
+}else{
+text+=f.label+": "+parseFloat(v).toFixed(1)+"\n";
+}
+}
+if(f.type==="checkbox"){
+text+=f.label+": "+(el.checked?"Aktiv":"Inaktiv")+"\n";
+}
+if(f.type==="display"){
+text+=f.label+": "+el.textContent+"\n";
+}
+});
+
+navigator.clipboard.writeText(text).then(()=>{
+const status=document.getElementById("copyStatus");
+status.style.display="block";
+setTimeout(()=>{status.style.display="none";},3000);
+});
+}
+
+/* =====================================================
+   Initialisering
+===================================================== */
+populatePumpDropdown();
+
+pumpSwitch.addEventListener("change",calculate);
+pumpModel.addEventListener("change",calculate);
+tdiInput.addEventListener("input",calculate);
+document.getElementById("copyButton").addEventListener("click",copyToJournal);
+
+</script>
+</body>
+</html>
