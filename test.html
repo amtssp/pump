@@ -120,4 +120,158 @@ const basalRateOutput = document.getElementById("basalRate");
 const isfOutput = document.getElementById("isf");
 const icrOutput = document.getElementById("icr");
 const pumpTitle = document.getElementById("pumpTitle");
-const pumpFieldsContainer = document.getElementById("pumpFiel
+const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
+
+/* =====================================================
+   Auto-generer dropdown ud fra pumps.js
+===================================================== */
+function populatePumpDropdown() {
+    Object.keys(pumps).forEach(key => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = pumps[key].name;
+        pumpModel.appendChild(option);
+    });
+}
+
+/* =====================================================
+   Generér pumpespecifikke felter
+===================================================== */
+function showPumpFields(key){
+pumpFieldsContainer.innerHTML="";
+if(!pumps[key]) return;
+pumpTitle.textContent=pumps[key].name;
+
+pumps[key].fields.forEach(f=>{
+let wrap=document.createElement("div");
+
+if(f.type==="select"){
+wrap.innerHTML=`<label>${f.label}</label>`;
+let s=document.createElement("select");
+s.id=f.id;
+f.options.forEach(o=>{
+let opt=document.createElement("option");
+opt.value=o;
+opt.textContent=o;
+s.appendChild(opt);
+});
+wrap.appendChild(s);
+}
+
+if(f.type==="number"){
+wrap.innerHTML=`<label>${f.label}</label>`;
+let i=document.createElement("input");
+i.type="number";
+i.id=f.id;
+if(f.min!==undefined) i.min=f.min;
+if(f.max!==undefined) i.max=f.max;
+if(f.step!==undefined) i.step=f.step;
+
+if(f.min!==undefined && f.max!==undefined){
+i.addEventListener("input",()=>{
+let v=parseFloat(i.value);
+if(isNaN(v)) return;
+if(v<f.min) i.value=Number(f.min).toFixed(1);
+if(v>f.max) i.value=Number(f.max).toFixed(1);
+});
+}
+wrap.appendChild(i);
+}
+
+if(f.type==="checkbox"){
+let l=document.createElement("label");
+let c=document.createElement("input");
+c.type="checkbox";
+c.id=f.id;
+l.appendChild(c);
+l.append(" "+f.label);
+wrap.appendChild(l);
+}
+
+if(f.type==="display"){
+wrap.innerHTML=`<strong>${f.label}:</strong> <span id="${f.id}"></span>`;
+}
+
+pumpFieldsContainer.appendChild(wrap);
+});
+}
+
+/* =====================================================
+   Beregning
+===================================================== */
+function calculate(){
+const tdi=parseFloat(tdiInput.value);
+if(!pumpSwitch.checked||!tdi||pumpModel.value===""){
+basalRateOutput.textContent="";
+isfOutput.textContent="";
+icrOutput.textContent="";
+pumpTitle.textContent="Pumpespecifikke indstillinger";
+pumpFieldsContainer.innerHTML="";
+return;
+}
+
+const adjusted=tdi*0.8;
+basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(1);
+isfOutput.textContent=(100/adjusted).toFixed(0);
+icrOutput.textContent=(500/adjusted).toFixed(0);
+
+showPumpFields(pumpModel.value);
+
+if(document.getElementById("tddi")){
+document.getElementById("tddi").textContent=adjusted.toFixed(0);
+}
+}
+
+/* =====================================================
+   Kopiér til journal
+===================================================== */
+function copyToJournal(){
+let text="Insulinpumpe opstart\n";
+text+="Pumpe: "+pumpTitle.textContent+"\n\n";
+text+="Basalrate: "+basalRateOutput.textContent+" IE/time\n";
+text+="Insulinfølsomheds Faktor (ISF): "+isfOutput.textContent+" mmol/L per IE\n";
+text+="Kulhydratratio (ICR): "+icrOutput.textContent+" g/IE\n\n";
+
+const key=pumpModel.value;
+if(!pumps[key]) return;
+
+pumps[key].fields.forEach(f=>{
+const el=document.getElementById(f.id);
+if(!el) return;
+
+if(f.type==="number"||f.type==="select"){
+let v=el.value;
+if(!v||isNaN(parseFloat(v))){
+text+=f.label+": skal udfyldes senere\n";
+}else{
+text+=f.label+": "+parseFloat(v).toFixed(1)+"\n";
+}
+}
+if(f.type==="checkbox"){
+text+=f.label+": "+(el.checked?"Aktiv":"Inaktiv")+"\n";
+}
+if(f.type==="display"){
+text+=f.label+": "+el.textContent+"\n";
+}
+});
+
+navigator.clipboard.writeText(text).then(()=>{
+const status=document.getElementById("copyStatus");
+status.style.display="block";
+setTimeout(()=>{status.style.display="none";},3000);
+});
+}
+
+/* =====================================================
+   Initialisering
+===================================================== */
+populatePumpDropdown();
+
+pumpSwitch.addEventListener("change",calculate);
+pumpModel.addEventListener("change",calculate);
+tdiInput.addEventListener("input",calculate);
+document.getElementById("copyButton").addEventListener("click",copyToJournal);
+
+</script>
+</body>
+</html>
