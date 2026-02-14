@@ -73,7 +73,7 @@ const pumps = {
       {
         type: "display",
         id: "tddi",
-        label: "Total daglig insulin"
+        label: "Total daglig insulin (IE)"
       },
 
       {
@@ -98,7 +98,7 @@ const pumps = {
       {
         type: "display",
         id: "tddi",
-        label: "Total daglig insulin"
+        label: "Total daglig insulin (IE)"
       },
 
       {
