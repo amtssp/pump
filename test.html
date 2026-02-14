@@ -239,13 +239,19 @@ pumps[key].fields.forEach(f=>{
 const el=document.getElementById(f.id);
 if(!el) return;
 
+
 if(f.type==="number"||f.type==="select"){
-let v=el.value;
-if(!v||isNaN(parseFloat(v))){
-text+=f.label+": skal udfyldes senere\n";
+let v = el.value;
+const journalLabel = f.label_o || f.label;
+
+if(!v || isNaN(parseFloat(v))){
+text += journalLabel + ": skal udfyldes senere\n";
 }else{
-text+=f.label+": "+parseFloat(v).toFixed(1)+"\n";
+text += journalLabel + ": " + parseFloat(v).toFixed(1) + "\n";
 }
+}
+
+  
 }
 if(f.type==="checkbox"){
 text+=f.label+": "+(el.checked?"Aktiv":"Inaktiv")+"\n";
