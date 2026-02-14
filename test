@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<title>Insulinpumpe Opstarts Beregner</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background-color: #f4f6f8;
+}
+.container {
+    max-width: 700px;
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+label {
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+}
+input[type="number"], select {
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+}
+.results {
+    margin-top:25px;
+    padding:15px;
+    background:#eef3f7;
+    border-radius:6px;
+}
+.note {
+    font-size:12px;
+    color:#666;
+    margin-top:20px;
+    border-top:1px solid #ccc;
+    padding-top:15px;
+}
+button {
+    margin-top:20px;
+    padding:10px 15px;
+    cursor:pointer;
+}
+#copyStatus {
+    margin-top:10px;
+    padding:8px;
+    background-color:#d4edda;
+    color:#155724;
+    border-radius:4px;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h2>Insulinpumpe Opstarts Beregner [VOKSEN]</h2>
+
+<label>
+<input type="checkbox" id="pumpSwitch">
+Jeg skifter fra pen-behandling til insulinpumpe
+</label>
+
+<label>Total Daglig Insulin (IE/dag)</label>
+<input type="number" id="tdi" step="0.1" min="0">
+
+<label>Valg af insulinpumpe</label>
+<select id="pumpModel">
+<option value="">-- Vælg pumpe --</option>
+<option value="medtronic780g">Medtronic 780G</option>
+<option value="tandem">Tandem Control-IQ</option>
+<option value="ypso">YpsoPump</option>
+<option value="omnipod5">Omnipod 5</option>
+</select>
+
+<div class="note">
+<strong>Info om beregninger:</strong><br>
+Pen-dosering reduceres med 20% dernæst forudsættes en <b>fordeling på 50/50 (basal/bolus)</b>.
+Basalen fordeles over 24 timer (=basalrate).
+For Insulinfølsomhed benyttes <b>100-reglen</b>.
+For Insulin kulhydrat ratio benyttes <b>500-reglen</b>
+</div>
+
+<div class="results">
+<h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
+
+<div>
+<strong>Basal Rate:</strong> <span id="basalRate"></span> IE/time<br>
+<strong>Insulinfølsomhed (ISF):</strong> <span id="isf"></span> mmol/L per IE<br>
+<strong>Kulhydratratio (ICR):</strong> <span id="icr"></span> g/IE
+</div>
+
+<div id="pumpFieldsContainer"></div>
+
+<button id="copyButton">Kopiér indstillinger</button>
+<div id="copyStatus">✔ Tekst kopieret</div>
+</div>
+
+<div class="note">
+<strong>Bemærk:</strong><br>
+Dette værktøj er udelukkende udviklet til undervisningsbrug.
+Beregningerne kan ikke erstatte individuel klinisk vurdering.
+Det er altid den behandlingsansvarlige sundhedsperson, der skal tage endelig stilling.
+</div>
+
+</div>
+
+<!-- 🔹 Indlæs pumpedefinitioner -->
+<script src="pumps.js"></script>
+
+<!-- 🔹 Din beregningslogik -->
+<script>
+
+const pumpSwitch = document.getElementById("pumpSwitch");
+const pumpModel = document.getElementById("pumpModel");
+const tdiInput = document.getElementById("tdi");
+
+const basalRateOutput = document.getElementById("basalRate");
+const isfOutput = document.getElementById("isf");
+const icrOutput = document.getElementById("icr");
+const pumpTitle = document.getElementById("pumpTitle");
+const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
+
+function showPumpFields(key){
+pumpFieldsContainer.innerHTML="";
+if(!pumps[key]) return;
+pumpTitle.textContent=pumps[key].name;
+
+pumps[key].fields.forEach(f=>{
+let wrap=document.createElement("div");
+
+if(f.type==="select"){
+wrap.innerHTML=`<label>${f.label}</label>`;
+let s=document.createElement("select");
+s.id=f.id;
+f.options.forEach(o=>{
+let opt=document.createElement("option");
+opt.value=o;
+opt.textContent=o;
+s.appendChild(opt);
+});
+wrap.appendChild(s);
+}
+
+if(f.type==="number"){
+wrap.innerHTML=`<label>${f.label}</label>`;
+let i=document.createElement("input");
+i.type="number";
+i.id=f.id;
+if(f.min!==undefined) i.min=f.min;
+if(f.max!==undefined) i.max=f.max;
+if(f.step!==undefined) i.step=f.step;
+
+if(f.min!==undefined && f.max!==undefined){
+i.addEventListener("input",()=>{
+let v=parseFloat(i.value);
+if(isNaN(v)) return;
+if(v<f.min) i.value=Number(f.min).toFixed(1);
+if(v>f.max) i.value=Number(f.max).toFixed(1);
+});
+}
+wrap.appendChild(i);
+}
+
+if(f.type==="checkbox"){
+let l=document.createElement("label");
+let c=document.createElement("input");
+c.type="checkbox";
+c.id=f.id;
+l.appendChild(c);
+l.append(" "+f.label);
+wrap.appendChild(l);
+}
+
+if(f.type==="display"){
+wrap.innerHTML=`<strong>${f.label}:</strong> <span id="${f.id}"></span>`;
+}
+
+pumpFieldsContainer.appendChild(wrap);
+});
+}
+
+function calculate(){
+const tdi=parseFloat(tdiInput.value);
+if(!pumpSwitch.checked||!tdi||pumpModel.value===""){
+basalRateOutput.textContent="";
+isfOutput.textContent="";
+icrOutput.textContent="";
+pumpTitle.textContent="Pumpespecifikke indstillinger";
+pumpFieldsContainer.innerHTML="";
+return;
+}
+
+const adjusted=tdi*0.8;
+basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(1);
+isfOutput.textContent=(100/adjusted).toFixed(0);
+icrOutput.textContent=(500/adjusted).toFixed(0);
+
+showPumpFields(pumpModel.value);
+
+if(document.getElementById("tddi")){
+document.getElementById("tddi").textContent=adjusted.toFixed(0);
+}
+}
+
+function copyToJournal(){
+let text="Insulinpumpe opstart\n";
+text+="Pumpe: "+pumpTitle.textContent+"\n\n";
+text+="Basalrate: "+basalRateOutput.textContent+" IE/time\n";
+text+="Insulinfølsomheds Faktor (ISF): "+isfOutput.textContent+" mmol/L per IE\n";
+text+="Kulhydratratio (ICR): "+icrOutput.textContent+" g/IE\n\n";
+
+const key=pumpModel.value;
+if(!pumps[key]) return;
+
+pumps[key].fields.forEach(f=>{
+const el=document.getElementById(f.id);
+if(!el) return;
+
+if(f.type==="number"||f.type==="select"){
+let v=el.value;
+if(!v||isNaN(parseFloat(v))){
+text+=f.label+": skal udfyldes senere\n";
+}else{
+text+=f.label+": "+parseFloat(v).toFixed(1)+"\n";
+}
+}
+if(f.type==="checkbox"){
+text+=f.label+": "+(el.checked?"Aktiv":"Inaktiv")+"\n";
+}
+if(f.type==="display"){
+text+=f.label+": "+el.textContent+"\n";
+}
+});
+
+navigator.clipboard.writeText(text).then(()=>{
+const status=document.getElementById("copyStatus");
+status.style.display="block";
+setTimeout(()=>{status.style.display="none";},3000);
+});
+}
+
+pumpSwitch.addEventListener("change",calculate);
+pumpModel.addEventListener("change",calculate);
+tdiInput.addEventListener("input",calculate);
+document.getElementById("copyButton").addEventListener("click",copyToJournal);
+
+</script>
+</body>
+</html>
