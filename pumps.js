@@ -42,7 +42,7 @@ const pumps = {
         type: "select",
         id: "target",
         label: "Vælg glukosemål (mmol/l)",
-        options: [5.5, 6.1, 6.5]
+        options: [5.5, 6.1, 6.5],
         label_o: "Glukosemål (mmol/l)",
       },
 
@@ -52,7 +52,7 @@ const pumps = {
         label: "Vælg aktiv insulintid (2–5 timer)",
         min: 2,
         max: 5,
-        step: 0.5
+        step: 0.5,
         label_o: "Aktiv insulintid (2–5 timer)",
       },
 
@@ -84,7 +84,7 @@ const pumps = {
         type: "number",
         id: "weight",
         label: "Angiv kropsvægt (kg)",
-        step: 0.1
+        step: 0.1,
         label_o: "Kropsvægt (kg)",
       }
 
@@ -110,7 +110,7 @@ const pumps = {
         type: "number",
         id: "weight",
         label: "Angiv kropsvægt (kg)",
-        step: 0.1
+        step: 0.1,
         label_o: "Kropsvægt (kg)",
       },
 
@@ -118,8 +118,8 @@ const pumps = {
         type: "select",
         id: "target",
         label: "Vælg glukosemål (mmol/l)",
-        options: [5.5, 6.0, 6.5]
-        label_0: "Glukosemål (mmol/l)",
+        options: [5.5, 6.0, 6.5],
+        label_o: "Glukosemål (mmol/l)",
       }
 
       // Hvis du senere vil tilføje aktiv insulintid:
@@ -151,7 +151,7 @@ const pumps = {
         type: "select",
         id: "target",
         label: "Vælg glukosemål (mmol/l)",
-        options: [6.1, 6.7, 7.3, 7.8, 8.3]
+        options: [6.1, 6.7, 7.3, 7.8, 8.3],
         label_o: "Glukosemål (mmol/l)",
       },
 
@@ -165,7 +165,7 @@ const pumps = {
         type: "number",
         id: "minGlucose",
         label: "Vælg minimum blodsukker for beregning",
-        step: 0.1
+        step: 0.1,
         label_o: "Minimum blodsukker for beregning",
       }
 
