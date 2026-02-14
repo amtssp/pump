@@ -72,13 +72,15 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <label>Valg af insulinpumpe</label>
 <select id="pumpModel">
 <option value="">-- Vælg pumpe --</option>
-<option value="medtronic780g">Medtronic 780G</option>
-<option value="tandem">Tandem Control-IQ</option>
-<option value="ypso">YpsoPump</option>
-<option value="omnipod5">Omnipod 5</option>
 </select>
 
-<div class="note"> <strong>Info om beregninger:</strong><br> Pen-dosering reduceres med 20% dernæst forudsættes en <b>fordeling på 50/50 (basal/bolus)</b>. Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes <b>100-reglen</b>. For Insulin kulhydrat ratio benyttes <b>500-reglen</b> </div>
+<div class="note">
+<strong>Info om beregninger:</strong><br>
+Pen-dosering reduceres med 20% dernæst forudsættes en <b>fordeling på 50/50 (basal/bolus)</b>.
+Basalen fordeles over 24 timer (=basalrate).
+For Insulinfølsomhed benyttes <b>100-reglen</b>.
+For Insulin kulhydrat ratio benyttes <b>500-reglen</b>
+</div>
 
 <div class="results">
 <h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
@@ -105,6 +107,9 @@ Det er altid den behandlingsansvarlige sundhedsperson, der skal tage endelig sti
 
 </div>
 
+<!-- 🔹 Indlæs pumpedefinitioner -->
+<script src="pumps.js"></script>
+
 <script>
 
 const pumpSwitch = document.getElementById("pumpSwitch");
@@ -117,42 +122,21 @@ const icrOutput = document.getElementById("icr");
 const pumpTitle = document.getElementById("pumpTitle");
 const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
 
-const pumps = {
-medtronic780g: {
-name:"Medtronic 780G",
-fields:[
-{type:"select",id:"target",label:"Glukosemål (mmol/l)",options:[5.5,6.1,6.5]},
-{type:"number",id:"ait",label:"Aktiv insulintid (2–5 timer)",min:2,max:5,step:0.5},
-{type:"checkbox",id:"auto",label:"Autokorrektion aktiv"}
-]
-},
-tandem:{
-name:"Tandem Control-IQ",
-fields:[
-{type:"display",id:"tddi",label:"Total daglig insulin"},
-{type:"number",id:"weight",label:"Kropsvægt (kg)",step:0.1}
-]
-},
-ypso:{
-name:"YpsoPump",
-fields:[
-{type:"display",id:"tddi",label:"Total daglig insulin"},
-{type:"number",id:"weight",label:"Kropsvægt (kg)",step:0.1},
-{type:"select",id:"target",label:"Glukosemål (mmol/l)",options:[5.5,6.0,6.5]},
-<!-- Add comments like this -->
-<!-- {type:"number",id:"ait",label:"Aktiv insulintid (2–5 timer)",min:2,max:5,step:0.5} -->
-]
-},
-omnipod5:{
-name:"Omnipod 5",
-fields:[
-{type:"select",id:"target",label:"Glukosemål (mmol/l)",options:[6.1,6.7,7.3,7.8,8.3]},
-{type:"checkbox",id:"reverse",label:"Omvendt korrektion aktiv"},
-{type:"number",id:"minGlucose",label:"Minimum blodsukker for beregning",step:0.1}
-]
+/* =====================================================
+   Auto-generer dropdown ud fra pumps.js
+===================================================== */
+function populatePumpDropdown() {
+    Object.keys(pumps).forEach(key => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = pumps[key].name;
+        pumpModel.appendChild(option);
+    });
 }
-};
 
+/* =====================================================
+   Generér pumpespecifikke felter
+===================================================== */
 function showPumpFields(key){
 pumpFieldsContainer.innerHTML="";
 if(!pumps[key]) return;
@@ -212,6 +196,9 @@ pumpFieldsContainer.appendChild(wrap);
 });
 }
 
+/* =====================================================
+   Beregning
+===================================================== */
 function calculate(){
 const tdi=parseFloat(tdiInput.value);
 if(!pumpSwitch.checked||!tdi||pumpModel.value===""){
@@ -235,6 +222,9 @@ document.getElementById("tddi").textContent=adjusted.toFixed(0);
 }
 }
 
+/* =====================================================
+   Kopiér til journal
+===================================================== */
 function copyToJournal(){
 let text="Insulinpumpe opstart\n";
 text+="Pumpe: "+pumpTitle.textContent+"\n\n";
@@ -249,14 +239,18 @@ pumps[key].fields.forEach(f=>{
 const el=document.getElementById(f.id);
 if(!el) return;
 
+
 if(f.type==="number"||f.type==="select"){
-let v=el.value;
-if(!v||isNaN(parseFloat(v))){
-text+=f.label+": skal udfyldes senere\n";
+let v = el.value;
+const journalLabel = f.label_o || f.label;
+
+if(!v || isNaN(parseFloat(v))){
+text += journalLabel + ": skal udfyldes senere\n";
 }else{
-text+=f.label+": "+parseFloat(v).toFixed(1)+"\n";
+text += journalLabel + ": " + parseFloat(v).toFixed(1) + "\n";
 }
 }
+
 if(f.type==="checkbox"){
 text+=f.label+": "+(el.checked?"Aktiv":"Inaktiv")+"\n";
 }
@@ -271,6 +265,11 @@ status.style.display="block";
 setTimeout(()=>{status.style.display="none";},3000);
 });
 }
+
+/* =====================================================
+   Initialisering
+===================================================== */
+populatePumpDropdown();
 
 pumpSwitch.addEventListener("change",calculate);
 pumpModel.addEventListener("change",calculate);
