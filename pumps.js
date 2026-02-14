@@ -10,6 +10,8 @@ pumpKey: {
         { type:"...", id:"...", label:"...", ...ekstra }
     ]
 }
+- label er det der vises i UI
+- label_o er det der vises når teksten kopiere
 
 Field-typer:
 - "display"  → Vis tekst (ingen input)
@@ -41,6 +43,7 @@ const pumps = {
         id: "target",
         label: "Vælg glukosemål (mmol/l)",
         options: [5.5, 6.1, 6.5]
+        label_o: "Glukosemål (mmol/l)",
       },
 
       {
@@ -50,6 +53,7 @@ const pumps = {
         min: 2,
         max: 5,
         step: 0.5
+        label_o: "Aktiv insulintid (2–5 timer)",
       },
 
       {
@@ -81,6 +85,7 @@ const pumps = {
         id: "weight",
         label: "Angiv kropsvægt (kg)",
         step: 0.1
+        label_o: "Kropsvægt (kg)",
       }
 
     ]
@@ -106,6 +111,7 @@ const pumps = {
         id: "weight",
         label: "Angiv kropsvægt (kg)",
         step: 0.1
+        label_o: "Kropsvægt (kg)",
       },
 
       {
@@ -113,6 +119,7 @@ const pumps = {
         id: "target",
         label: "Vælg glukosemål (mmol/l)",
         options: [5.5, 6.0, 6.5]
+        label_0: "Glukosemål (mmol/l)",
       }
 
       // Hvis du senere vil tilføje aktiv insulintid:
@@ -145,6 +152,7 @@ const pumps = {
         id: "target",
         label: "Vælg glukosemål (mmol/l)",
         options: [6.1, 6.7, 7.3, 7.8, 8.3]
+        label_o: "Glukosemål (mmol/l)",
       },
 
       {
@@ -158,6 +166,7 @@ const pumps = {
         id: "minGlucose",
         label: "Vælg minimum blodsukker for beregning",
         step: 0.1
+        label_o: "Minimum blodsukker for beregning",
       }
 
     ]
