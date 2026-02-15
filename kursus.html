@@ -106,24 +106,26 @@
         });
     }
 
-    function kopierValgte() {
-        let tekst = "Læs mere om de ønskede kurser:\n\n";
+function kopierValgte() {
+    let tekst = "Info fra klinikken:\n\n";
+    tekst += "Læs mere om:\n\n";
 
-        kurser.forEach((kursus, index) => {
-            const checkbox = document.getElementById(`kursus_${index}`);
-            if (checkbox.checked) {
-                tekst += `${kursus.kortNavn} - ${kursus.link}\n`;
-            }
-        });
+    kurser.forEach((kursus, index) => {
+        const checkbox = document.getElementById(`kursus_${index}`);
+        if (checkbox.checked) {
+            tekst += `• ${kursus.kortNavn}\n${kursus.link}\n\n`;
+        }
+    });
 
-        navigator.clipboard.writeText(tekst).then(() => {
-            kopiBesked.style.display = "block";
+    tekst += "Vh\n[Steno Diabetes Center Aarhus]";
 
-            setTimeout(() => {
-                kopiBesked.style.display = "none";
-            }, 3000);
-        });
-    }
+    navigator.clipboard.writeText(tekst).then(() => {
+        kopiBesked.style.display = "block";
+        setTimeout(() => {
+            kopiBesked.style.display = "none";
+        }, 3000);
+    });
+}
 
     genererKursusListe();
 </script>
