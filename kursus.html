@@ -37,6 +37,16 @@
             cursor: pointer;
         }
 
+        .kursus-link {
+    color: #1a73e8;          /* blå farve for link */
+    text-decoration: none;    /* fjern underline som standard */
+    margin-right: 5px;        /* lidt afstand til 🔗 */
+}
+
+.kursus-link:hover {
+    text-decoration: underline;  /* underline ved hover */
+}
+        
         #kopiBesked {
             margin-top: 10px;
             padding: 10px;
@@ -74,21 +84,23 @@
     const valgteListe = document.getElementById("valgteListe");
     const kopiBesked = document.getElementById("kopiBesked");
 
-    function genererKursusListe() {
-        kurser.forEach((kursus, index) => {
-            const div = document.createElement("div");
-            div.className = "kursus-linje";
+function genererKursusListe() {
+    kurser.forEach((kursus, index) => {
+        const div = document.createElement("div");
+        div.className = "kursus-linje";
 
-            div.innerHTML = `
-                <input type="checkbox" id="kursus_${index}" onchange="opdaterValgte()">
-                <label for="kursus_${index}">
-                    <strong>${kursus.navn}</strong> - ${kursus.beskrivelse}
-                </label>
-            `;
+        div.innerHTML = `
+            <input type="checkbox" id="kursus_${index}" onchange="opdaterValgte()">
 
-            kursusListeDiv.appendChild(div);
-        });
-    }
+            <a href="${kursus.link}" target="_blank" rel="noopener noreferrer" class="kursus-link">
+                <strong>${kursus.navn}</strong> 🔗
+            </a>
+            - ${kursus.beskrivelse}
+        `;
+
+        kursusListeDiv.appendChild(div);
+    });
+}
 
     function opdaterValgte() {
         valgteListe.innerHTML = "";
