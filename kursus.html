@@ -1,0 +1,146 @@
+const kurser = [
+    {
+        navn: "Avanceret Excel Analyse",
+        kortNavn: "Excel Analyse",
+        beskrivelse: "Lær pivottabeller, Power Query og avancerede formler.",
+        link: "https://example.com/excel-analyse"
+    },
+    {
+        navn: "Grundlæggende HTML & CSS",
+        kortNavn: "HTML CSS",
+        beskrivelse: "Introduktion til webudvikling med HTML og CSS.",
+        link: "https://example.com/html-css"
+    },
+    {
+        navn: "JavaScript for Begyndere",
+        kortNavn: "JavaScript",
+        beskrivelse: "Forstå grundlæggende JavaScript og DOM manipulation.",
+        link: "https://example.com/javascript"
+    }
+];
+Du kan frit tilføje flere objekter — HTML’en opdateres automatisk.
+
+2️⃣ index.html
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <title>Kursus vælger</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        h1, h2 {
+            margin-bottom: 10px;
+        }
+
+        .kursus-linje {
+            margin-bottom: 10px;
+        }
+
+        #valgteKurser {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        #kopiBesked {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Kursus vælger</h1>
+
+<div id="kursusListe"></div>
+
+<div id="valgteKurser">
+    <h2>Valgte kurser</h2>
+    <ul id="valgteListe"></ul>
+    <button onclick="kopierValgte()">Kopiér valgte kurser</button>
+    <div id="kopiBesked">Info kopieret til udklipsholder.</div>
+</div>
+
+<script src="kursusoversigt.js"></script>
+
+<script>
+    const kursusListeDiv = document.getElementById("kursusListe");
+    const valgteListe = document.getElementById("valgteListe");
+    const kopiBesked = document.getElementById("kopiBesked");
+
+    function genererKursusListe() {
+        kurser.forEach((kursus, index) => {
+            const div = document.createElement("div");
+            div.className = "kursus-linje";
+
+            div.innerHTML = `
+                <input type="checkbox" id="kursus_${index}" onchange="opdaterValgte()">
+                <label for="kursus_${index}">
+                    <strong>${kursus.navn}</strong> - ${kursus.beskrivelse}
+                </label>
+            `;
+
+            kursusListeDiv.appendChild(div);
+        });
+    }
+
+    function opdaterValgte() {
+        valgteListe.innerHTML = "";
+
+        kurser.forEach((kursus, index) => {
+            const checkbox = document.getElementById(`kursus_${index}`);
+            if (checkbox.checked) {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    ${kursus.kortNavn} -
+                    <a href="${kursus.link}" target="_blank">${kursus.link}</a>
+                `;
+                valgteListe.appendChild(li);
+            }
+        });
+    }
+
+    function kopierValgte() {
+        let tekst = "Valgte kurser:\n\n";
+
+        kurser.forEach((kursus, index) => {
+            const checkbox = document.getElementById(`kursus_${index}`);
+            if (checkbox.checked) {
+                tekst += `${kursus.kortNavn} - ${kursus.link}\n`;
+            }
+        });
+
+        navigator.clipboard.writeText(tekst).then(() => {
+            kopiBesked.style.display = "block";
+
+            setTimeout(() => {
+                kopiBesked.style.display = "none";
+            }, 3000);
+        });
+    }
+
+    genererKursusListe();
+</script>
+
+</body>
+</html>
