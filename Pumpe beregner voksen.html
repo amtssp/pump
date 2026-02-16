@@ -212,7 +212,7 @@ return;
 
 const adjusted=tdi*0.8;
 basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(2);
-isfOutput.textContent=(100/adjusted).toFixed(0);
+isfOutput.textContent=(100/adjusted).toFixed(1);
 icrOutput.textContent=(500/adjusted).toFixed(0);
 
 showPumpFields(pumpModel.value);
