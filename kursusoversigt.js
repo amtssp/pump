@@ -7,7 +7,7 @@ const kurser = [
     },
     {
         navn: "Mad og diabetes",
-        kortNavn: "HTML CSS.",
+        kortNavn: "Mad og diabetes.",
         beskrivelse: "Mad og diabetes.",
         link: "https://diabetes.rm.dk/dine-muligheder/mad-og-diabetes/"
     },
