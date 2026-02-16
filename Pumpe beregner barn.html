@@ -207,7 +207,7 @@ return;
 }
 
 const adjusted=tdi*0.8;
-basalRateOutput.textContent=((adjusted*0.4)/24).toFixed(1);
+basalRateOutput.textContent=((adjusted*0.4)/24).toFixed(2);
 isfOutput.textContent=(100/adjusted).toFixed(1);
 icrOutput.textContent=(450/adjusted).toFixed(1);
 
@@ -274,5 +274,6 @@ document.getElementById("copyButton").addEventListener("click",copyToJournal);
 </script>
 </body>
 </html>
+
 
 
