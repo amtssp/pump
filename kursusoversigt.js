@@ -1,3 +1,4 @@
+console.log("Kursusfil indlæst");
 const kurser = [
     {
         navn: "Graviditet og diabetes",
