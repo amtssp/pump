@@ -30,7 +30,30 @@
     border: none;
     border-top: 1px solid #ccc;
         }
+.steno-button {
+    margin-top: 15px;
+    padding: 10px 18px;
+    cursor: pointer;
 
+    background-color: #C2185B;   /* professionel rosa */
+    border: none;
+    border-radius: 6px;
+
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.steno-button:hover {
+    background-color: #A3154E;
+}
+
+.steno-button:active {
+    transform: scale(0.98);
+}
+        
         button {
             margin-top: 15px;
             padding: 8px 12px;
@@ -73,7 +96,10 @@
     <h2>Valgte kurser</h2> 
     <p>Kan sendes så man hjemme kan læse mere og evt tilmelde sig.</p>
     <ul id="valgteListe"></ul>
-    <button onclick="kopierValgte()"><b>Kopiér de valgte kurser så de kan sendes som SMS via EPJ</b></button>
+<button class="steno-button" onclick="kopierValgte()">
+    Kopiér valgte kurser, kan sendes som SMS via EPJ
+</button>
+
     <div id="kopiBesked">Info kopieret til udklipsholder.</div>
 </div>
 
