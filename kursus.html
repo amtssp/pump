@@ -53,7 +53,11 @@
 .steno-button:active {
     transform: scale(0.98);
 }
-        
+.steno-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}        
         button {
             margin-top: 15px;
             padding: 8px 12px;
@@ -128,22 +132,29 @@ function genererKursusListe() {
     });
 }
 
-    function opdaterValgte() {
-        valgteListe.innerHTML = "";
+function opdaterValgte() {
+    valgteListe.innerHTML = "";
+    let antalValgte = 0;
 
-        kurser.forEach((kursus, index) => {
-            const checkbox = document.getElementById(`kursus_${index}`);
-            if (checkbox.checked) {
-                const li = document.createElement("li");
-                li.innerHTML = `
-                    ${kursus.kortNavn} -
-                    <a href="${kursus.link}" target="_blank">${kursus.link}</a>
-                `;
-                valgteListe.appendChild(li);
-            }
-        });
-    }
+    kurser.forEach((kursus, index) => {
+        const checkbox = document.getElementById(`kursus_${index}`);
+        if (checkbox.checked) {
+            antalValgte++;
 
+            const li = document.createElement("li");
+            li.innerHTML = `
+                ${kursus.kortNavn} -
+                <a href="${kursus.link}" target="_blank">${kursus.link}</a>
+            `;
+            valgteListe.appendChild(li);
+        }
+    });
+
+    const kopierBtn = document.getElementById("kopierBtn");
+    kopierBtn.disabled = antalValgte === 0;
+}
+    
+   
 function kopierValgte() {
     let tekst = "Læs mere om:\n";
     tekst += "(og tilmeld dig evt på siden)\n\n";
