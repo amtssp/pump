@@ -9,7 +9,7 @@ const kurser = [
     {
         navn: "Mad og diabetes",
         kortNavn: "Mad og diabetes.",
-        beskrivelse: "Mad og diabetes.",
+        beskrivelse: "Gå på opdagelse og find opskrifter, videoer og få et tip til at tælle kulhydrater.",
         link: "https://diabetes.rm.dk/dine-muligheder/mad-og-diabetes/"
     },
     {
