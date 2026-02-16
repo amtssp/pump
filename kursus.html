@@ -119,8 +119,8 @@ function genererKursusListe() {
     }
 
 function kopierValgte() {
-    let tekst = "Info fra klinikken:\n\n";
-    tekst += "Læs mere om:\n\n";
+    let tekst = "Læs mere om:\n";
+    tekst += "og tilmeld dig evt på siden:\n\n";
 
     kurser.forEach((kursus, index) => {
         const checkbox = document.getElementById(`kursus_${index}`);
@@ -129,7 +129,6 @@ function kopierValgte() {
         }
     });
 
-    tekst += "Vh\n[Steno Diabetes Center Aarhus]";
 
     navigator.clipboard.writeText(tekst).then(() => {
         kopiBesked.style.display = "block";
