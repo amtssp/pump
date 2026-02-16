@@ -17,7 +17,7 @@ const kurser = [
         beskrivelse: "Diabetes kan påvirke dig psykisk og dine tanker og følelser kan også påvirke din diabetes. Hvis du er udfordret af din diabetes, så læs mere her.",
         link: "https://diabetes.rm.dk/dine-muligheder/mental-trivsel/"
     },
-        {
+    {
         navn: "Motion og Type 1 diabetes",
         kortNavn: "Motion og diabetes",
         beskrivelse: "Har du type 1-diabetes og vil du vide mere om, hvordan du kan balancere motion og diabetes? Læs mere her.",
