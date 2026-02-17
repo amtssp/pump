@@ -7,14 +7,14 @@
 <style>
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 40px;
     background-color: #f4f6f8;
 }
 
 .container {
     max-width: 950px;
     background: white;
-    padding: 20px;
+    padding: 25px 30px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
@@ -26,23 +26,19 @@ label {
 input[type="number"], select {
     width:100%;
     padding:6px;
-    box-sizing:border-box;
 }
 
 .results {
-    margin-top:20px;
-    padding:20px;
+    margin-top:25px;
+    padding:25px;
     background:#eef3f7;
     border-radius:6px;
-    display:flex;
-    flex-direction:column;
 }
 
 .result-grid {
     display:grid;
     grid-template-columns: 1fr 320px;
     gap:30px;
-    flex-grow:1;
 }
 
 .result-values {
@@ -53,12 +49,10 @@ input[type="number"], select {
 .result-row {
     display:grid;
     grid-template-columns: 1fr auto;
-    border-bottom:1px solid #d9e2ec;
-    padding-bottom:4px;
 }
 
 .result-row div:first-child {
-    font-weight:700;
+    font-weight:600;
 }
 
 .value {
@@ -66,57 +60,26 @@ input[type="number"], select {
     text-align:right;
 }
 
+.info-box {
+    padding:18px;
+    background:#ffe6ef;
+    border:1px solid #f5b5c8;
+    border-radius:6px;
+    font-size:0.9rem;
+    align-self:start; /* lyserød boks starter øverst */
+}
+
 .pump-fields {
     margin-top:20px;
     display:grid;
-    gap:12px;
+    gap:14px;
 }
 
 .pump-field-row {
     display:grid;
     grid-template-columns: 1fr 200px;
-    gap:16px;
+    gap:20px;
     align-items:center;
-}
-
-.pump-field-row input,
-.pump-field-row select,
-.pump-field-row div {
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
-    background-color: #f4f6f8;
-    border: 1px solid #d9e2ec;
-    border-radius: 4px;
-    min-height: 30px;
-}
-
-.info-box {
-    padding:15px;
-    background:#ffe6ef;
-    border:1px solid #f5b5c8;
-    border-radius:6px;
-    font-size:0.9rem;
-    margin-bottom:15px;
-}
-
-button {
-    margin-top:20px;
-    padding:8px 14px;
-}
-
-button:disabled {
-    opacity:0.5;
-    cursor:not-allowed;
-}
-
-#copyStatus {
-    margin-top:8px;
-    padding:6px;
-    background:#d4edda;
-    color:#155724;
-    border-radius:4px;
-    display:none;
 }
 
 .note {
@@ -125,6 +88,20 @@ button:disabled {
     margin-top:15px;
     border-top:1px solid #ccc;
     padding-top:10px;
+}
+
+button {
+    margin-top:25px;
+    padding:10px 16px;
+}
+
+#copyStatus {
+    margin-top:10px;
+    padding:8px;
+    background:#d4edda;
+    color:#155724;
+    border-radius:4px;
+    display:none;
 }
 </style>
 </head>
@@ -152,14 +129,10 @@ Jeg skifter fra pen-behandling til insulinpumpe
 </select>
 
 <div class="note">
-<strong>Info om beregninger:</strong> Pen-dosering reduceres med 20%, dernæst forudsættes en fordeling på 50/50 (basal/bolus). Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes 100-reglen, og for Insulin kulhydrat ratio benyttes 500-reglen.
+<strong>Info om beregninger:</strong> Pen-dosering reduceres med 20% og fordeles på 50/50 basal/bolus. Basalen fordeles over 24 timer, ISF beregnes med 100-reglen og ICR med 500-reglen.
 </div>
 
 <div class="results">
-
-<div class="info-box">
-<strong>Klinisk overvejelse</strong> Ved høj HbA1c kan langsommere korrektion være gavnlig. Værdier kan justeres når de indsættes i EPJ: justere insulinfølsomhed, kulhydratratio, basalrate, højt glukosemål eller aktiv insulin tid afhængig af pumpen.
-</div>
 
 <h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
 
@@ -184,6 +157,19 @@ Jeg skifter fra pen-behandling til insulinpumpe
 
 </div>
 
+<div class="info-box">
+<strong>Klinisk overvejelse</strong><br>
+Ved høj HbA1c kan langsommere korrektion være gavnlig.<br>
+Værdier kan justeres når de indsættes i EPJ:
+<ul>
+<li>justere insulinfølsomheden</li>
+<li>justere kulhydratratio</li>
+<li>afhængig af pumpen: ændre basalrate, højt glukosemål, aktiv insulin tid osv.</li>
+</ul>
+</div>
+
+</div>
+
 </div>
 
 <div id="pumpFieldsContainer" class="pump-fields"></div>
@@ -192,7 +178,7 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <div id="copyStatus">✔ Tekst kopieret</div>
 
 <div class="note">
-<strong>Bemærk:</strong> Dette værktøj er udelukkende til undervisningsbrug og kan ikke erstatte individuel klinisk vurdering. Endelig beslutning træffes af behandlingsansvarlig sundhedsperson.
+<strong>Bemærk:</strong> Dette værktøj er kun til undervisning. Beregningerne kan ikke erstatte klinisk vurdering.
 </div>    
     
 </div>
@@ -210,6 +196,8 @@ const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
 const pumpTitle = document.getElementById("pumpTitle");
 const copyButton = document.getElementById("copyButton");
 
+let previousPump = "";
+
 /* Dropdown */
 function populatePumpDropdown(){
     Object.keys(pumps).forEach(key=>{
@@ -223,104 +211,116 @@ function populatePumpDropdown(){
 /* Beregning */
 function calculate(){
     const tdi=parseFloat(tdiInput.value);
+
     if(!pumpSwitch.checked || !tdi){
         basalRateOutput.textContent="";
         isfOutput.textContent="";
         icrOutput.textContent="";
         return;
     }
-    const adjusted = tdi * 0.8;
-    basalRateOutput.textContent = ((adjusted*0.5)/24).toFixed(2);
-    isfOutput.textContent = (100/adjusted).toFixed(1);
-    icrOutput.textContent = (500/adjusted).toFixed(0);
+
+    const adjusted=tdi*0.8;
+
+    basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(2);
+    isfOutput.textContent=(100/adjusted).toFixed(1);
+    icrOutput.textContent=(500/adjusted).toFixed(0);
+
     updateDisplayFields(adjusted);
 }
 
-/* Opdater display felter */
-function updateDisplayFields(adjusted){
-    const selected = pumpModel.value;
+/* Opdater display-felter */
+function updateDisplayFields(adjustedTDI){
+    const selected=pumpModel.value;
     if(!selected) return;
-    const pump = pumps[selected];
+
+    const pump=pumps[selected];
     if(!pump.fields) return;
+
     pump.fields.forEach(f=>{
-        if(f.type === "display"){
-            const el = document.getElementById("field_"+f.id);
-            if(el) el.textContent = adjusted.toFixed(0);
+        if(f.type==="display"){
+            const el=document.getElementById("field_"+f.id);
+            if(el){
+                el.textContent=adjustedTDI.toFixed(0);
+            }
         }
     });
 }
 
-/* Render pump felter */
+/* Render pump-felter */
 function renderPumpFields(){
     pumpFieldsContainer.innerHTML="";
-    const selected = pumpModel.value;
+    const selected=pumpModel.value;
     if(!selected) return;
-    const pump = pumps[selected];
-    pump.fields.forEach(f=>{
-        const row = document.createElement("div");
-        row.className = "pump-field-row";
+    const pump=pumps[selected];
 
-        const label = document.createElement("label");
-        label.textContent = f.label;
+    pump.fields.forEach(f=>{
+        const row=document.createElement("div");
+        row.className="pump-field-row";
+
+        const label=document.createElement("label");
+        label.textContent=f.label;
 
         let input;
         if(f.type==="number"){
-            input = document.createElement("input");
-            input.type = "number";
-            input.step = f.step || "0.1";
+            input=document.createElement("input");
+            input.type="number";
+            input.step=f.step||"0.1";
         }
         if(f.type==="select"){
-            input = document.createElement("select");
-            const empty = document.createElement("option");
-            empty.value=""; empty.textContent="-- vælg --";
-            input.appendChild(empty);
+            input=document.createElement("select");
+            const emptyOption=document.createElement("option");
+            emptyOption.value=""; emptyOption.textContent="-- vælg --";
+            input.appendChild(emptyOption);
             f.options.forEach(opt=>{
-                const option = document.createElement("option");
-                option.value = opt;
-                option.textContent = opt;
+                const option=document.createElement("option");
+                option.value=opt;
+                option.textContent=opt;
                 input.appendChild(option);
             });
         }
         if(f.type==="checkbox"){
-            input = document.createElement("input");
-            input.type = "checkbox";
+            input=document.createElement("input");
+            input.type="checkbox";
         }
         if(f.type==="display"){
-            input = document.createElement("div");
+            input=document.createElement("div");
         }
-
-        input.id = "field_"+f.id;
+        input.id="field_"+f.id;
         row.appendChild(label);
         row.appendChild(input);
         pumpFieldsContainer.appendChild(row);
     });
-    updateDisplayFields(tdiInput.value*0.8);
+
+    const tdiVal=parseFloat(tdiInput.value);
+    if(!isNaN(tdiVal)){
+        updateDisplayFields(tdiVal*0.8);
+    }
 }
 
 /* Copy */
 function copyToClipboard(){
-    if(!pumpModel.value) return; // sikkerhed
-    let text = "Insulinpumpe opstartsindstillinger\n\n";
-    text += "Pumpe: "+ pumps[pumpModel.value].name + "\n\n";
-    text +=
-        "Basal Rate:     "+basalRateOutput.textContent+" IE/time\n"+
-        "Insulinfølsomhed (ISF): "+isfOutput.textContent+" mmol/L per IE\n"+
-        "Kulhydratratio (ICR):   "+icrOutput.textContent+" g/IE\n";
+    if(!pumpModel.value) return;
+
+    let text = `Insulinpumpe opstartsindstillinger\n\n`;
+    text += `Pumpe: ${pumps[pumpModel.value].name}\n\n`;
+    text += `Basal Rate: ${basalRateOutput.textContent} IE/time\n`;
+    text += `Insulinfølsomhed (ISF): ${isfOutput.textContent} mmol/L per IE\n`;
+    text += `Kulhydratratio (ICR): ${icrOutput.textContent} g/IE\n\n`;
 
     const pump = pumps[pumpModel.value];
     if(pump && pump.fields){
         pump.fields.forEach(f=>{
-            const el = document.getElementById("field_"+f.id);
+            const el=document.getElementById("field_"+f.id);
             if(!el) return;
             if(f.type==="number"||f.type==="select"){
                 let v = el.value;
-                text += (f.label_o||f.label)+": "+(v || "skal udfyldes senere")+"\n";
+                text += `${f.label_o||f.label}: ${v?v:"skal udfyldes"}\n`;
             }
             if(f.type==="checkbox"){
-                text += f.label+": "+(el.checked?"Ja":"Nej")+"\n";
+                text += `${f.label}: ${el.checked?"Ja":"Nej"}\n`;
             }
             if(f.type==="display"){
-                text += f.label+": "+el.textContent+"\n";
+                text += `${f.label}: ${el.textContent}\n`;
             }
         });
     }
@@ -328,28 +328,30 @@ function copyToClipboard(){
     navigator.clipboard.writeText(text).then(()=>{
         const status=document.getElementById("copyStatus");
         status.style.display="block";
-        setTimeout(()=>status.style.display="none",2000);
+        setTimeout(()=>{status.style.display="none";},2000);
     });
 }
 
 /* Init */
 populatePumpDropdown();
-
-pumpSwitch.addEventListener("change",calculate);
-tdiInput.addEventListener("input",calculate);
+pumpSwitch.addEventListener("change", calculate);
+tdiInput.addEventListener("input", calculate);
 
 pumpModel.addEventListener("change", ()=>{
-    pumpTitle.textContent = pumpModel.value ? pumps[pumpModel.value].name : "Pumpespecifikke indstillinger";
-    tdiInput.value = ""; // nulstil TDI ved pumpevalg
-    basalRateOutput.textContent="";
-    isfOutput.textContent="";
-    icrOutput.textContent="";
+    const newPump = pumpModel.value;
+    if(previousPump && previousPump !== newPump){
+        tdiInput.value="";
+        basalRateOutput.textContent="";
+        isfOutput.textContent="";
+        icrOutput.textContent="";
+    }
+    previousPump = newPump;
+    pumpTitle.textContent = newPump ? pumps[newPump].name : "Pumpespecifikke indstillinger";
     renderPumpFields();
-    copyButton.disabled = !pumpModel.value; // aktiver kun hvis pumpe valgt
+    copyButton.disabled = !newPump;
 });
 
-copyButton.addEventListener("click", copyToClipboard);
+document.getElementById("copyButton").addEventListener("click", copyToClipboard);
 </script>
-
 </body>
 </html>
