@@ -29,21 +29,18 @@ input[type="number"], select {
 }
 
 .results {
-    margin-top:25px;
-    padding:25px;
+    margin-top:20px;
+    padding:20px;
     background:#eef3f7;
     border-radius:6px;
-}
-
-.result-grid {
-    display:grid;
-    grid-template-columns: 1fr 320px;
-    gap:30px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
 }
 
 .result-values {
     display:grid;
-    gap:10px;
+    gap:6px; /* mindre afstand */
 }
 
 .result-row {
@@ -61,12 +58,12 @@ input[type="number"], select {
 }
 
 .info-box {
-    padding:18px;
+    padding:15px;
     background:#ffe6ef;
     border:1px solid #f5b5c8;
     border-radius:6px;
     font-size:0.9rem;
-    align-self:start; /* lyserød boks starter øverst */
+    margin-top:10px;
 }
 
 .pump-fields {
@@ -91,7 +88,7 @@ input[type="number"], select {
 }
 
 button {
-    margin-top:25px;
+    margin-top:15px;
     padding:10px 16px;
 }
 
@@ -136,10 +133,7 @@ Jeg skifter fra pen-behandling til insulinpumpe
 
 <h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
 
-<div class="result-grid">
-
 <div class="result-values">
-
 <div class="result-row">
 <div>Basal Rate</div>
 <div class="value"><span id="basalRate"></span> IE/time</div>
@@ -154,20 +148,16 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <div>Kulhydratratio (ICR)</div>
 <div class="value"><span id="icr"></span> g/IE</div>
 </div>
-
 </div>
 
 <div class="info-box">
 <strong>Klinisk overvejelse</strong><br>
-Ved høj HbA1c kan langsommere korrektion være gavnlig.<br>
-Værdier kan justeres når de indsættes i EPJ:
+Ved høj HbA1c kan langsommere korrektion være gavnlig. Værdier kan justeres når de indsættes i EPJ:
 <ul>
 <li>justere insulinfølsomheden</li>
 <li>justere kulhydratratio</li>
 <li>afhængig af pumpen: ændre basalrate, højt glukosemål, aktiv insulin tid osv.</li>
 </ul>
-</div>
-
 </div>
 
 </div>
