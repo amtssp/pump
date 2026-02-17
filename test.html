@@ -238,12 +238,54 @@ function calculate(){
     icrOutput.textContent = (500/adjusted).toFixed(0);
 }
 
+/* Kopier til udklipsholder */    
+function copyToClipboard(){
+
+    if(!pumpSwitch.checked || !tdiInput.value || pumpModel.value===""){
+        alert("Udfyld først alle relevante felter.");
+        return;
+    }
+
+    const pump = pumps[pumpModel.value];
+    let text = "Insulinpumpe opstartsindstillinger\n\n";
+
+    text += "Basal rate: " + basalRateOutput.textContent + " IE/time\n";
+    text += "Insulinfølsomhed (ISF): " + isfOutput.textContent + " mmol/L per IE\n";
+    text += "Kulhydratratio (ICR): " + icrOutput.textContent + " g/IE\n\n";
+
+    // Pumpespecifikke felter
+    if(pump.fields){
+        pump.fields.forEach(f => {
+            const el = document.getElementById("field_"+f.id);
+            if(!el) return;
+
+            if(f.type==="number" || f.type==="select"){
+                let v = el.value;
+
+                if(!v || isNaN(parseFloat(v))){
+                    text += (f.label_o || f.label) + ": skal udfyldes senere\n";
+                } else {
+                    text += (f.label_o || f.label) + ": " + parseFloat(v).toFixed(1) + "\n";
+                }
+            }
+        });
+    }
+
+    navigator.clipboard.writeText(text).then(() => {
+        const status = document.getElementById("copyStatus");
+        status.style.display = "block";
+        setTimeout(()=>status.style.display="none",2000);
+    });
+}
+
+
+    
 /* Init */
 populatePumpDropdown();
 pumpSwitch.addEventListener("change",calculate);
 pumpModel.addEventListener("change",calculate);
 tdiInput.addEventListener("input",calculate);
-
+document.getElementById("copyButton").addEventListener("click", copyToClipboard);
 </script>
 
 </body>
