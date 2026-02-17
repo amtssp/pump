@@ -7,14 +7,14 @@
 <style>
 body {
     font-family: Arial, sans-serif;
-    margin: 40px;
+    margin: 20px;
     background-color: #f4f6f8;
 }
 
 .container {
     max-width: 950px;
     background: white;
-    padding: 25px 30px;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
@@ -26,6 +26,7 @@ label {
 input[type="number"], select {
     width:100%;
     padding:6px;
+    box-sizing:border-box;
 }
 
 .results {
@@ -35,26 +36,59 @@ input[type="number"], select {
     border-radius:6px;
     display:flex;
     flex-direction:column;
-    gap:12px;
+}
+
+.result-grid {
+    display:grid;
+    grid-template-columns: 1fr 320px;
+    gap:30px;
+    flex-grow:1;
 }
 
 .result-values {
     display:grid;
-    gap:6px; /* mindre afstand */
+    gap:10px; /* mindre mellemrum mellem rækker */
 }
 
 .result-row {
     display:grid;
     grid-template-columns: 1fr auto;
+    border-bottom:1px solid #d9e2ec;
+    padding-bottom:4px; /* lidt mindre padding */
 }
 
 .result-row div:first-child {
-    font-weight:600;
+    font-weight:700; /* Fed tekst på labels */
 }
 
 .value {
     font-weight:600;
     text-align:right;
+}
+
+.pump-fields {
+    margin-top:20px;
+    display:grid;
+    gap:12px;
+}
+
+.pump-field-row {
+    display:grid;
+    grid-template-columns: 1fr 200px;
+    gap:16px;
+    align-items:center;
+}
+
+.pump-field-row input,
+.pump-field-row select,
+.pump-field-row div {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    background-color: #f4f6f8;
+    border: 1px solid #d9e2ec;
+    border-radius: 4px;
+    min-height: 30px;
 }
 
 .info-box {
@@ -63,20 +97,21 @@ input[type="number"], select {
     border:1px solid #f5b5c8;
     border-radius:6px;
     font-size:0.9rem;
-    margin-top:10px;
+    margin-bottom:15px; /* lidt afstand under */
 }
 
-.pump-fields {
+button {
     margin-top:20px;
-    display:grid;
-    gap:14px;
+    padding:8px 14px;
 }
 
-.pump-field-row {
-    display:grid;
-    grid-template-columns: 1fr 200px;
-    gap:20px;
-    align-items:center;
+#copyStatus {
+    margin-top:8px;
+    padding:6px;
+    background:#d4edda;
+    color:#155724;
+    border-radius:4px;
+    display:none;
 }
 
 .note {
@@ -85,20 +120,6 @@ input[type="number"], select {
     margin-top:15px;
     border-top:1px solid #ccc;
     padding-top:10px;
-}
-
-button {
-    margin-top:15px;
-    padding:10px 16px;
-}
-
-#copyStatus {
-    margin-top:10px;
-    padding:8px;
-    background:#d4edda;
-    color:#155724;
-    border-radius:4px;
-    display:none;
 }
 </style>
 </head>
@@ -126,14 +147,26 @@ Jeg skifter fra pen-behandling til insulinpumpe
 </select>
 
 <div class="note">
-<strong>Info om beregninger:</strong> Pen-dosering reduceres med 20% og fordeles på 50/50 basal/bolus. Basalen fordeles over 24 timer, ISF beregnes med 100-reglen og ICR med 500-reglen.
+<strong>Info om beregninger:</strong> Pen-dosering reduceres med 20%, dernæst forudsættes en fordeling på 50/50 (basal/bolus). Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes 100-reglen, og for Insulin kulhydrat ratio benyttes 500-reglen.
+
+
+
+
 </div>
 
 <div class="results">
 
+<div class="info-box">
+<strong>Klinisk overvejelse</strong><br>
+Ved høj HbA1c kan langsommere korrektion være gavnlig. Værdier kan justeres når de indsættes i EPJ: justere insulinfølsomhed, kulhydratratio, basalrate, højt glukosemål eller aktiv insulin tid afhængig af pumpen.
+</div>
+
 <h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
 
+<div class="result-grid">
+
 <div class="result-values">
+
 <div class="result-row">
 <div>Basal Rate</div>
 <div class="value"><span id="basalRate"></span> IE/time</div>
@@ -148,29 +181,34 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <div>Kulhydratratio (ICR)</div>
 <div class="value"><span id="icr"></span> g/IE</div>
 </div>
+
 </div>
 
-<div class="info-box">
-<strong>Klinisk overvejelse</strong><br>
-Ved høj HbA1c kan langsommere korrektion være gavnlig. Værdier kan justeres når de indsættes i EPJ:
-<ul>
-<li>justere insulinfølsomheden</li>
-<li>justere kulhydratratio</li>
-<li>afhængig af pumpen: ændre basalrate, højt glukosemål, aktiv insulin tid osv.</li>
-</ul>
-</div>
+
+
+
+
+
+
+
+
+
+
 
 </div>
 
 <div id="pumpFieldsContainer" class="pump-fields"></div>
 
-<button id="copyButton" disabled>Kopiér indstillinger</button>
+<button id="copyButton">Kopiér indstillinger</button>
 <div id="copyStatus">✔ Tekst kopieret</div>
 
 <div class="note">
-<strong>Bemærk:</strong> Dette værktøj er kun til undervisning. Beregningerne kan ikke erstatte klinisk vurdering.
+<strong>Bemærk:</strong> Dette værktøj er udelukkende til undervisningsbrug og kan ikke erstatte individuel klinisk vurdering. Endelig beslutning træffes af behandlingsansvarlig sundhedsperson.
+
+
+
 </div>    
-    
+
 </div>
 
 <script src="pumps.js"></script>
@@ -179,12 +217,12 @@ Ved høj HbA1c kan langsommere korrektion være gavnlig. Værdier kan justeres n
 const pumpSwitch = document.getElementById("pumpSwitch");
 const pumpModel = document.getElementById("pumpModel");
 const tdiInput = document.getElementById("tdi");
+
 const basalRateOutput = document.getElementById("basalRate");
 const isfOutput = document.getElementById("isf");
 const icrOutput = document.getElementById("icr");
 const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
 const pumpTitle = document.getElementById("pumpTitle");
-const copyButton = document.getElementById("copyButton");
 
 /* Dropdown */
 function populatePumpDropdown(){
@@ -207,108 +245,107 @@ function calculate(){
         return;
     }
 
-    const adjusted=tdi*0.8;
+    const adjusted = tdi * 0.8;
 
-    basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(2);
-    isfOutput.textContent=(100/adjusted).toFixed(1);
-    icrOutput.textContent=(500/adjusted).toFixed(0);
+    basalRateOutput.textContent = ((adjusted*0.5)/24).toFixed(2);
+    isfOutput.textContent = (100/adjusted).toFixed(1);
+    icrOutput.textContent = (500/adjusted).toFixed(0);
 
     updateDisplayFields(adjusted);
 }
 
-/* Opdater display-felter */
-function updateDisplayFields(adjustedTDI){
-    const selected=pumpModel.value;
+/* Opdater display felter */
+function updateDisplayFields(adjusted){
+    const selected = pumpModel.value;
     if(!selected) return;
 
-    const pump=pumps[selected];
+    const pump = pumps[selected];
     if(!pump.fields) return;
 
     pump.fields.forEach(f=>{
-        if(f.type==="display"){
-            const el=document.getElementById("field_"+f.id);
-            if(el){
-                el.textContent=adjustedTDI.toFixed(0);
-            }
+        if(f.type === "display"){
+            const el = document.getElementById("field_"+f.id);
+            if(el) el.textContent = adjusted.toFixed(0);
+
+
         }
     });
 }
 
-/* Render pump-felter */
+/* Render pump felter */
 function renderPumpFields(){
     pumpFieldsContainer.innerHTML="";
-    const selected=pumpModel.value;
+    const selected = pumpModel.value;
     if(!selected) return;
-    const pump=pumps[selected];
-
+    const pump = pumps[selected];
     pump.fields.forEach(f=>{
-        const row=document.createElement("div");
-        row.className="pump-field-row";
+        const row = document.createElement("div");
+        row.className = "pump-field-row";
 
-        const label=document.createElement("label");
-        label.textContent=f.label;
+        const label = document.createElement("label");
+        label.textContent = f.label;
 
         let input;
         if(f.type==="number"){
-            input=document.createElement("input");
-            input.type="number";
-            input.step=f.step||"0.1";
+            input = document.createElement("input");
+            input.type = "number";
+            input.step = f.step || "0.1";
         }
         if(f.type==="select"){
-            input=document.createElement("select");
-            const emptyOption=document.createElement("option");
-            emptyOption.value=""; emptyOption.textContent="-- vælg --";
-            input.appendChild(emptyOption);
+            input = document.createElement("select");
+            const empty = document.createElement("option");
+            empty.value=""; empty.textContent="-- vælg --";
+            input.appendChild(empty);
             f.options.forEach(opt=>{
-                const option=document.createElement("option");
-                option.value=opt;
-                option.textContent=opt;
+                const option = document.createElement("option");
+                option.value = opt;
+                option.textContent = opt;
                 input.appendChild(option);
             });
         }
         if(f.type==="checkbox"){
-            input=document.createElement("input");
-            input.type="checkbox";
+            input = document.createElement("input");
+            input.type = "checkbox";
         }
         if(f.type==="display"){
-            input=document.createElement("div");
+            input = document.createElement("div");
         }
-        input.id="field_"+f.id;
+
+        input.id = "field_"+f.id;
         row.appendChild(label);
         row.appendChild(input);
         pumpFieldsContainer.appendChild(row);
     });
 
-    const tdiVal=parseFloat(tdiInput.value);
-    if(!isNaN(tdiVal)){
-        updateDisplayFields(tdiVal*0.8);
-    }
+    updateDisplayFields(tdiInput.value*0.8);
 }
 
 /* Copy */
 function copyToClipboard(){
-    if(!pumpModel.value) return;
-
-    let text = `Insulinpumpe opstartsindstillinger\n\n`;
-    text += `Pumpe: ${pumps[pumpModel.value].name}\n\n`;
-    text += `Basal Rate: ${basalRateOutput.textContent} IE/time\n`;
-    text += `Insulinfølsomhed (ISF): ${isfOutput.textContent} mmol/L per IE\n`;
-    text += `Kulhydratratio (ICR): ${icrOutput.textContent} g/IE\n\n`;
+    let text = "Insulinpumpe opstartsindstillinger\n\n";
+    text += "Pumpe: "+ (pumpModel.value ? pumps[pumpModel.value].name : "") + "\n\n";
+    text += "Basal rate: "+basalRateOutput.textContent+" IE/time\n";
+    text += "Insulinfølsomheds Faktor (ISF): "+isfOutput.textContent+" mmol/L per IE\n";
+    text += "KulhydratratioICR: "+icrOutput.textContent+" g/IE\n\n";
 
     const pump = pumps[pumpModel.value];
     if(pump && pump.fields){
         pump.fields.forEach(f=>{
-            const el=document.getElementById("field_"+f.id);
+            const el = document.getElementById("field_"+f.id);
             if(!el) return;
             if(f.type==="number"||f.type==="select"){
                 let v = el.value;
-                text += `${f.label_o||f.label}: ${v?v:"skal udfyldes"}\n`;
+                if(!v||isNaN(parseFloat(v))){
+                    text += (f.label_o||f.label)+": skal udfyldes senere\n";
+                }else{
+                    text += (f.label_o||f.label)+": "+v+"\n";
+                }
             }
             if(f.type==="checkbox"){
-                text += `${f.label}: ${el.checked?"Ja":"Nej"}\n`;
+                text += f.label+": "+(el.checked?"Ja":"Nej")+"\n";
             }
             if(f.type==="display"){
-                text += `${f.label}: ${el.textContent}\n`;
+                text += f.label+": "+el.textContent+"\n";
             }
         });
     }
@@ -316,23 +353,29 @@ function copyToClipboard(){
     navigator.clipboard.writeText(text).then(()=>{
         const status=document.getElementById("copyStatus");
         status.style.display="block";
-        setTimeout(()=>{status.style.display="none";},2000);
+        setTimeout(()=>status.style.display="none",2000);
     });
 }
 
 /* Init */
 populatePumpDropdown();
-pumpSwitch.addEventListener("change", calculate);
-tdiInput.addEventListener("input", calculate);
+
+pumpSwitch.addEventListener("change",calculate);
+tdiInput.addEventListener("input",calculate);
 
 pumpModel.addEventListener("change", ()=>{
-    const newPump = pumpModel.value;
-    pumpTitle.textContent = newPump ? pumps[newPump].name : "Pumpespecifikke indstillinger";
+    pumpTitle.textContent = pumpModel.value ? pumps[pumpModel.value].name : "Pumpespecifikke indstillinger";
+
+
+
+
     renderPumpFields();
-    copyButton.disabled = !newPump;
+    calculate();
 });
 
 document.getElementById("copyButton").addEventListener("click", copyToClipboard);
+
 </script>
+
 </body>
 </html>
