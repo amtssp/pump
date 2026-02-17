@@ -322,11 +322,11 @@ function renderPumpFields(){
 
 /* Copy */
 function copyToClipboard(){
-    let text = "Insulinpumpe opstartsindstillinger\n\n";
+    let text = "Insulinpumpe opstartsindstillinger\n";
     text += "Pumpe: "+ (pumpModel.value ? pumps[pumpModel.value].name : "") + "\n\n";
     text += "Basal rate: "+basalRateOutput.textContent+" IE/time\n";
     text += "Insulinfølsomheds Faktor (ISF): "+isfOutput.textContent+" mmol/L per IE\n";
-    text += "KulhydratratioICR: "+icrOutput.textContent+" g/IE\n\n";
+    text += "KulhydratratioICR: "+icrOutput.textContent+" g/IE\n";
 
     const pump = pumps[pumpModel.value];
     if(pump && pump.fields){
