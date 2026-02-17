@@ -45,7 +45,13 @@ input[type="number"], select {
     display:grid;
     gap:18px;
 }
-
+.note {
+    font-size:12px;
+    color:#666;
+    margin-top:20px;
+    border-top:1px solid #ccc;
+    padding-top:15px;
+}
 .result-row {
     display:grid;
     grid-template-columns: 1fr auto;
@@ -107,6 +113,7 @@ Jeg skifter fra pen-behandling til insulinpumpe
 
 <br><br>
 
+    
 <label>Total Daglig Insulin (IE/dag)</label>
 <input type="number" id="tdi" step="0.1">
 
@@ -116,6 +123,14 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <select id="pumpModel">
 <option value="">-- Vælg pumpe --</option>
 </select>
+
+<div class="note">
+<strong>Info om beregninger:</strong><br>
+Pen-dosering reduceres med 20% dernæst forudsættes en <b>fordeling på 50/50 (basal/bolus)</b>.
+Basalen fordeles over 24 timer (=basalrate).
+For Insulinfølsomhed benyttes <b>100-reglen</b>.
+For Insulin kulhydrat ratio benyttes <b>500-reglen</b>
+</div>
 
 <div class="results">
 
@@ -145,11 +160,12 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <div class="info-box">
 <strong>Klinisk overvejelse</strong><br><br>
 Ved høj HbA1c kan langsommere korrektion være gavnlig.<br><br>
-Overvej at:
+Overvej i de tilfælde at:
 <ul>
-<li>øge insulinfølsomheden</li>
-<li>øge kulhydratratio</li>
-<li>øge aktiv insulintid</li>
+<li>justere insulinfølsomheden</li>
+<li>justere kulhydratratio</li>
+<li>Afhængig af pumpen: ændre basalrate, højt glukosemål osv.</li>
+<li>justere aktiv insulintid</li>
 </ul>
 </div>
 
@@ -162,6 +178,13 @@ Overvej at:
 <button id="copyButton">Kopiér indstillinger</button>
 <div id="copyStatus">✔ Tekst kopieret</div>
 
+<div class="note">
+<strong>Bemærk:</strong><br>
+Dette værktøj er udelukkende udviklet til undervisningsbrug.
+Beregningerne kan ikke erstatte individuel klinisk vurdering.
+Det er altid den behandlingsansvarlige sundhedsperson, der skal tage endelig stilling.
+</div>    
+    
 </div>
 
 <script src="pumps.js"></script>
