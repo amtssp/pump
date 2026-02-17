@@ -164,7 +164,7 @@ const pumps = {
       {
         type: "number",
         id: "minGlucose",
-        label: "Vælg minimum blodsukker for beregning",
+        label: "Vælg minimum blodsukker for beregning (Ofte det samme som glukosemål)",
         step: 0.1,
         label_o: "Minimum blodsukker for beregning",
       }
