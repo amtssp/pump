@@ -19,20 +19,15 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Inputs */
 label {
-    display:block;
-    margin-top:18px;
     font-weight:600;
 }
 
 input[type="number"], select {
     width:100%;
-    padding:8px;
-    margin-top:6px;
+    padding:6px;
 }
 
-/* Results */
 .results {
     margin-top:30px;
     padding:25px;
@@ -44,7 +39,6 @@ input[type="number"], select {
     display:grid;
     grid-template-columns: 1fr 320px;
     gap:40px;
-    margin-top:20px;
 }
 
 .result-values {
@@ -55,22 +49,15 @@ input[type="number"], select {
 .result-row {
     display:grid;
     grid-template-columns: 1fr auto;
-    align-items:baseline;
     border-bottom:1px solid #d9e2ec;
     padding-bottom:6px;
-}
-
-.label {
-    font-weight:600;
 }
 
 .value {
     font-weight:600;
     text-align:right;
-    min-width:100px;
 }
 
-/* Pump fields */
 .pump-fields {
     margin-top:30px;
     display:grid;
@@ -80,36 +67,21 @@ input[type="number"], select {
 .pump-field-row {
     display:grid;
     grid-template-columns: 1fr 200px;
-    align-items:center;
     gap:20px;
+    align-items:center;
 }
 
-.pump-field-row label {
-    margin:0;
-    font-weight:600;
-}
-
-.pump-field-row input,
-.pump-field-row select {
-    width:100%;
-    padding:6px;
-}
-
-/* Info box */
 .info-box {
     padding:18px;
-    background-color:#ffe6ef;
+    background:#ffe6ef;
     border:1px solid #f5b5c8;
     border-radius:6px;
     font-size:0.9rem;
-    line-height:1.5;
 }
 
-/* Misc */
 button {
     margin-top:25px;
     padding:10px 16px;
-    cursor:pointer;
 }
 
 #copyStatus {
@@ -119,23 +91,6 @@ button {
     color:#155724;
     border-radius:4px;
     display:none;
-}
-
-.note {
-    font-size:12px;
-    color:#666;
-    margin-top:25px;
-    border-top:1px solid #ccc;
-    padding-top:15px;
-}
-
-@media (max-width:900px){
-    .result-grid {
-        grid-template-columns:1fr;
-    }
-    .pump-field-row {
-        grid-template-columns:1fr;
-    }
 }
 </style>
 </head>
@@ -150,8 +105,12 @@ button {
 Jeg skifter fra pen-behandling til insulinpumpe
 </label>
 
+<br><br>
+
 <label>Total Daglig Insulin (IE/dag)</label>
-<input type="number" id="tdi" step="0.1" min="0">
+<input type="number" id="tdi" step="0.1">
+
+<br><br>
 
 <label>Valg af insulinpumpe</label>
 <select id="pumpModel">
@@ -160,24 +119,24 @@ Jeg skifter fra pen-behandling til insulinpumpe
 
 <div class="results">
 
-<h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
+<h3>Pumpespecifikke indstillinger</h3>
 
 <div class="result-grid">
 
 <div class="result-values">
 
 <div class="result-row">
-<div class="label">Basal Rate</div>
+<div>Basal Rate</div>
 <div class="value"><span id="basalRate"></span> IE/time</div>
 </div>
 
 <div class="result-row">
-<div class="label">Insulinfølsomhed (ISF)</div>
+<div>Insulinfølsomhed (ISF)</div>
 <div class="value"><span id="isf"></span> mmol/L per IE</div>
 </div>
 
 <div class="result-row">
-<div class="label">Kulhydratratio (ICR)</div>
+<div>Kulhydratratio (ICR)</div>
 <div class="value"><span id="icr"></span> g/IE</div>
 </div>
 
@@ -198,16 +157,10 @@ Overvej at:
 
 </div>
 
-<!-- Pumpespecifikke felter -->
 <div id="pumpFieldsContainer" class="pump-fields"></div>
 
 <button id="copyButton">Kopiér indstillinger</button>
 <div id="copyStatus">✔ Tekst kopieret</div>
-
-<div class="note">
-Dette værktøj er udelukkende udviklet til undervisningsbrug.
-Beregningerne kan ikke erstatte individuel klinisk vurdering.
-</div>
 
 </div>
 
@@ -234,17 +187,55 @@ function populatePumpDropdown(){
     });
 }
 
-/* Render pump fields */
+/* Beregning — kræver kun checkbox + TDI */
+function calculate(){
+
+    const tdi=parseFloat(tdiInput.value);
+
+    if(!pumpSwitch.checked || !tdi){
+        basalRateOutput.textContent="";
+        isfOutput.textContent="";
+        icrOutput.textContent="";
+        return;
+    }
+
+    const adjusted=tdi*0.8;
+
+    basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(2);
+    isfOutput.textContent=(100/adjusted).toFixed(0);
+    icrOutput.textContent=(500/adjusted).toFixed(0);
+
+    updateDisplayFields();
+}
+
+/* Opdater display-felter */
+function updateDisplayFields(){
+
+    const selected=pumpModel.value;
+    if(!selected) return;
+
+    const pump=pumps[selected];
+    if(!pump.fields) return;
+
+    pump.fields.forEach(f=>{
+        if(f.type==="display"){
+            const el=document.getElementById("field_"+f.id);
+            if(el){
+                el.textContent=tdiInput.value || "";
+            }
+        }
+    });
+}
+
+/* Render felter */
 function renderPumpFields(){
 
     pumpFieldsContainer.innerHTML="";
 
     const selected=pumpModel.value;
-    if(!selected||!pumps[selected]) return;
+    if(!selected) return;
 
     const pump=pumps[selected];
-
-    if(!pump.fields) return;
 
     pump.fields.forEach(f=>{
 
@@ -260,12 +251,10 @@ function renderPumpFields(){
             input=document.createElement("input");
             input.type="number";
             input.step=f.step||"0.1";
-            input.min=f.min||"0";
         }
 
         if(f.type==="select"){
             input=document.createElement("select");
-
             const empty=document.createElement("option");
             empty.value="";
             empty.textContent="-- vælg --";
@@ -279,55 +268,59 @@ function renderPumpFields(){
             });
         }
 
+        if(f.type==="checkbox"){
+            input=document.createElement("input");
+            input.type="checkbox";
+        }
+
+        if(f.type==="display"){
+            input=document.createElement("div");
+        }
+
         input.id="field_"+f.id;
 
         row.appendChild(label);
         row.appendChild(input);
         pumpFieldsContainer.appendChild(row);
     });
-}
 
-/* Beregning */
-function calculate(){
-
-    const tdi=parseFloat(tdiInput.value);
-
-    if(!pumpSwitch.checked||!tdi||pumpModel.value===""){
-        basalRateOutput.textContent="";
-        isfOutput.textContent="";
-        icrOutput.textContent="";
-        return;
-    }
-
-    const adjusted=tdi*0.8;
-
-    basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(2);
-    isfOutput.textContent=(100/adjusted).toFixed(0);
-    icrOutput.textContent=(500/adjusted).toFixed(0);
+    updateDisplayFields();
 }
 
 /* Copy */
 function copyToClipboard(){
 
-    const pump=pumps[pumpModel.value];
     let text="Insulinpumpe opstartsindstillinger\n\n";
 
     text+="Basal rate: "+basalRateOutput.textContent+" IE/time\n";
     text+="ISF: "+isfOutput.textContent+" mmol/L per IE\n";
     text+="ICR: "+icrOutput.textContent+" g/IE\n\n";
 
-    if(pump.fields){
+    const pump=pumps[pumpModel.value];
+    if(pump && pump.fields){
+
         pump.fields.forEach(f=>{
+
             const el=document.getElementById("field_"+f.id);
             if(!el) return;
 
-            let v=el.value;
-
-            if(!v||isNaN(parseFloat(v))){
-                text+=(f.label_o||f.label)+": skal udfyldes senere\n";
-            }else{
-                text+=(f.label_o||f.label)+": "+parseFloat(v).toFixed(1)+"\n";
+            if(f.type==="number"||f.type==="select"){
+                let v=el.value;
+                if(!v||isNaN(parseFloat(v))){
+                    text+=(f.label_o||f.label)+": skal udfyldes senere\n";
+                }else{
+                    text+=(f.label_o||f.label)+": "+v+"\n";
+                }
             }
+
+            if(f.type==="checkbox"){
+                text+=f.label+": "+(el.checked?"Ja":"Nej")+"\n";
+            }
+
+            if(f.type==="display"){
+                text+=f.label+": "+el.textContent+"\n";
+            }
+
         });
     }
 
@@ -341,14 +334,16 @@ function copyToClipboard(){
 /* Init */
 populatePumpDropdown();
 
+pumpSwitch.addEventListener("change",calculate);
+tdiInput.addEventListener("input",calculate);
+
 pumpModel.addEventListener("change",()=>{
     renderPumpFields();
     calculate();
 });
 
-pumpSwitch.addEventListener("change",calculate);
-tdiInput.addEventListener("input",calculate);
-document.getElementById("copyButton").addEventListener("click",copyToClipboard);
+document.getElementById("copyButton")
+.addEventListener("click",copyToClipboard);
 
 </script>
 
