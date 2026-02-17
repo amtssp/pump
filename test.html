@@ -54,33 +54,37 @@ button {
     display:none;
 }
 
-.result-wrapper {
-    display: flex;
-    align-items: flex-start;  /* top-justering */
-    gap: 30px;
-    margin-top: 20px;
-}
+<div class="result-wrapper">
 
-.result-text {
-    flex: 1;
-}
+  <!-- Resultater -->
+  <div class="result-text">
 
-.result-line {
-    margin-bottom: 14px;
-    font-size: 1.05rem;
-}
+    <div class="result-line">
+      <strong>Basal Rate:</strong>
+      <span id="basalRate"></span> IE/time
+    </div>
 
-.info-box {
-    width: 300px;
-    padding: 15px;
-    background-color: #ffe6ef;
-    border: 1px solid #f5b5c8;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
+    <div class="result-line">
+      <strong>Insulinfølsomhed (ISF):</strong>
+      <span id="isf"></span> mmol/L per IE
+    </div>
 
-    
+    <div class="result-line">
+      <strong>Kulhydratratio (ICR):</strong>
+      <span id="icr"></span> g/IE
+    </div>
+
+  </div>  <!-- 🔹 MANGLEDE DENNE -->
+
+  <!-- Lyserød boks -->
+  <div class="info-box">
+    <strong>Klinisk overvejelse:</strong><br>
+    Ved høj HbA1c kan langsommere korrektion være gavnlig.
+    Så overvej at øge insulinfølsomheden, øge kulhydratratio
+    eller øg aktiv insulintid.
+  </div>
+
+</div>    
 </style>
 </head>
 
