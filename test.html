@@ -12,100 +12,129 @@ body {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 950px;
     background: white;
-    padding: 25px;
+    padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
+/* Inputs */
 label {
     display:block;
-    margin-top:15px;
-    font-weight:bold;
+    margin-top:18px;
+    font-weight:600;
 }
 
 input[type="number"], select {
     width:100%;
     padding:8px;
-    margin-top:5px;
+    margin-top:6px;
 }
 
+/* Results */
 .results {
-    margin-top:25px;
-    padding:20px;
+    margin-top:30px;
+    padding:25px;
     background:#eef3f7;
     border-radius:6px;
 }
 
-.note {
-    font-size:12px;
-    color:#666;
+.result-grid {
+    display:grid;
+    grid-template-columns: 1fr 320px;
+    gap:40px;
     margin-top:20px;
-    border-top:1px solid #ccc;
-    padding-top:15px;
 }
 
+.result-values {
+    display:grid;
+    gap:18px;
+}
+
+.result-row {
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:baseline;
+    border-bottom:1px solid #d9e2ec;
+    padding-bottom:6px;
+}
+
+.label {
+    font-weight:600;
+}
+
+.value {
+    font-weight:600;
+    text-align:right;
+    min-width:100px;
+}
+
+/* Pump fields */
+.pump-fields {
+    margin-top:30px;
+    display:grid;
+    gap:16px;
+}
+
+.pump-field-row {
+    display:grid;
+    grid-template-columns: 1fr 200px;
+    align-items:center;
+    gap:20px;
+}
+
+.pump-field-row label {
+    margin:0;
+    font-weight:600;
+}
+
+.pump-field-row input,
+.pump-field-row select {
+    width:100%;
+    padding:6px;
+}
+
+/* Info box */
+.info-box {
+    padding:18px;
+    background-color:#ffe6ef;
+    border:1px solid #f5b5c8;
+    border-radius:6px;
+    font-size:0.9rem;
+    line-height:1.5;
+}
+
+/* Misc */
 button {
-    margin-top:20px;
-    padding:10px 15px;
+    margin-top:25px;
+    padding:10px 16px;
     cursor:pointer;
 }
 
 #copyStatus {
     margin-top:10px;
     padding:8px;
-    background-color:#d4edda;
+    background:#d4edda;
     color:#155724;
     border-radius:4px;
     display:none;
 }
 
-/* ===== Grid Layout ===== */
-
-.result-grid {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 40px;
-    margin-top: 20px;
+.note {
+    font-size:12px;
+    color:#666;
+    margin-top:25px;
+    border-top:1px solid #ccc;
+    padding-top:15px;
 }
 
-.result-values {
-    display: grid;
-    gap: 18px;
-}
-
-.result-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: baseline;
-    border-bottom: 1px solid #d9e2ec;
-    padding-bottom: 6px;
-}
-
-.label {
-    font-weight: 600;
-}
-
-.value {
-    font-weight: 600;
-    text-align: right;
-    min-width: 100px;
-}
-
-.info-box {
-    padding: 18px;
-    background-color: #ffe6ef;
-    border: 1px solid #f5b5c8;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    line-height: 1.5;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
+@media (max-width:900px){
     .result-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns:1fr;
+    }
+    .pump-field-row {
+        grid-template-columns:1fr;
     }
 }
 </style>
@@ -129,71 +158,59 @@ Jeg skifter fra pen-behandling til insulinpumpe
 <option value="">-- Vælg pumpe --</option>
 </select>
 
-<div class="note">
-<strong>Info om beregninger:</strong><br>
-Pen-dosering reduceres med 20% dernæst forudsættes en <b>fordeling på 50/50 (basal/bolus)</b>.
-Basalen fordeles over 24 timer (=basalrate).
-For Insulinfølsomhed benyttes <b>100-reglen</b>.
-For Insulin kulhydrat ratio benyttes <b>500-reglen</b>.
-</div>
-
 <div class="results">
 
 <h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
 
 <div class="result-grid">
 
-    <!-- Resultater -->
-    <div class="result-values">
+<div class="result-values">
 
-        <div class="result-row">
-            <div class="label">Basal Rate</div>
-            <div class="value"><span id="basalRate"></span> IE/time</div>
-        </div>
+<div class="result-row">
+<div class="label">Basal Rate</div>
+<div class="value"><span id="basalRate"></span> IE/time</div>
+</div>
 
-        <div class="result-row">
-            <div class="label">Insulinfølsomhed (ISF)</div>
-            <div class="value"><span id="isf"></span> mmol/L per IE</div>
-        </div>
+<div class="result-row">
+<div class="label">Insulinfølsomhed (ISF)</div>
+<div class="value"><span id="isf"></span> mmol/L per IE</div>
+</div>
 
-        <div class="result-row">
-            <div class="label">Kulhydratratio (ICR)</div>
-            <div class="value"><span id="icr"></span> g/IE</div>
-        </div>
-
-    </div>
-
-    <!-- Klinisk boks -->
-    <div class="info-box">
-        <strong>Klinisk overvejelse</strong><br><br>
-        Ved høj HbA1c kan langsommere korrektion være gavnlig.<br><br>
-        Overvej at:
-        <ul>
-            <li>øge insulinfølsomheden</li>
-            <li>øge kulhydratratio</li>
-            <li>øge aktiv insulintid</li>
-        </ul>
-    </div>
-
+<div class="result-row">
+<div class="label">Kulhydratratio (ICR)</div>
+<div class="value"><span id="icr"></span> g/IE</div>
 </div>
 
 </div>
 
-<div id="pumpFieldsContainer"></div>
+<div class="info-box">
+<strong>Klinisk overvejelse</strong><br><br>
+Ved høj HbA1c kan langsommere korrektion være gavnlig.<br><br>
+Overvej at:
+<ul>
+<li>øge insulinfølsomheden</li>
+<li>øge kulhydratratio</li>
+<li>øge aktiv insulintid</li>
+</ul>
+</div>
+
+</div>
+
+</div>
+
+<!-- Pumpespecifikke felter -->
+<div id="pumpFieldsContainer" class="pump-fields"></div>
 
 <button id="copyButton">Kopiér indstillinger</button>
 <div id="copyStatus">✔ Tekst kopieret</div>
 
 <div class="note">
-<strong>Bemærk:</strong><br>
 Dette værktøj er udelukkende udviklet til undervisningsbrug.
 Beregningerne kan ikke erstatte individuel klinisk vurdering.
-Det er altid den behandlingsansvarlige sundhedsperson, der skal tage endelig stilling.
 </div>
 
 </div>
 
-<!-- Indlæs pumpedefinitioner -->
 <script src="pumps.js"></script>
 
 <script>
@@ -205,87 +222,134 @@ const tdiInput = document.getElementById("tdi");
 const basalRateOutput = document.getElementById("basalRate");
 const isfOutput = document.getElementById("isf");
 const icrOutput = document.getElementById("icr");
-const pumpTitle = document.getElementById("pumpTitle");
 const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
 
 /* Dropdown */
-function populatePumpDropdown() {
-    Object.keys(pumps).forEach(key => {
-        const option = document.createElement("option");
-        option.value = key;
-        option.textContent = pumps[key].name;
+function populatePumpDropdown(){
+    Object.keys(pumps).forEach(key=>{
+        const option=document.createElement("option");
+        option.value=key;
+        option.textContent=pumps[key].name;
         pumpModel.appendChild(option);
+    });
+}
+
+/* Render pump fields */
+function renderPumpFields(){
+
+    pumpFieldsContainer.innerHTML="";
+
+    const selected=pumpModel.value;
+    if(!selected||!pumps[selected]) return;
+
+    const pump=pumps[selected];
+
+    if(!pump.fields) return;
+
+    pump.fields.forEach(f=>{
+
+        const row=document.createElement("div");
+        row.className="pump-field-row";
+
+        const label=document.createElement("label");
+        label.textContent=f.label;
+
+        let input;
+
+        if(f.type==="number"){
+            input=document.createElement("input");
+            input.type="number";
+            input.step=f.step||"0.1";
+            input.min=f.min||"0";
+        }
+
+        if(f.type==="select"){
+            input=document.createElement("select");
+
+            const empty=document.createElement("option");
+            empty.value="";
+            empty.textContent="-- vælg --";
+            input.appendChild(empty);
+
+            f.options.forEach(opt=>{
+                const option=document.createElement("option");
+                option.value=opt;
+                option.textContent=opt;
+                input.appendChild(option);
+            });
+        }
+
+        input.id="field_"+f.id;
+
+        row.appendChild(label);
+        row.appendChild(input);
+        pumpFieldsContainer.appendChild(row);
     });
 }
 
 /* Beregning */
 function calculate(){
-    const tdi = parseFloat(tdiInput.value);
 
-    if(!pumpSwitch.checked || !tdi || pumpModel.value===""){
+    const tdi=parseFloat(tdiInput.value);
+
+    if(!pumpSwitch.checked||!tdi||pumpModel.value===""){
         basalRateOutput.textContent="";
         isfOutput.textContent="";
         icrOutput.textContent="";
-        pumpTitle.textContent="Pumpespecifikke indstillinger";
-        pumpFieldsContainer.innerHTML="";
         return;
     }
 
-    const adjusted = tdi * 0.8;
+    const adjusted=tdi*0.8;
 
-    basalRateOutput.textContent = ((adjusted*0.5)/24).toFixed(2);
-    isfOutput.textContent = (100/adjusted).toFixed(0);
-    icrOutput.textContent = (500/adjusted).toFixed(0);
+    basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(2);
+    isfOutput.textContent=(100/adjusted).toFixed(0);
+    icrOutput.textContent=(500/adjusted).toFixed(0);
 }
 
-/* Kopier til udklipsholder */    
+/* Copy */
 function copyToClipboard(){
 
-    if(!pumpSwitch.checked || !tdiInput.value || pumpModel.value===""){
-        alert("Udfyld først alle relevante felter.");
-        return;
-    }
+    const pump=pumps[pumpModel.value];
+    let text="Insulinpumpe opstartsindstillinger\n\n";
 
-    const pump = pumps[pumpModel.value];
-    let text = "Insulinpumpe opstartsindstillinger\n\n";
+    text+="Basal rate: "+basalRateOutput.textContent+" IE/time\n";
+    text+="ISF: "+isfOutput.textContent+" mmol/L per IE\n";
+    text+="ICR: "+icrOutput.textContent+" g/IE\n\n";
 
-    text += "Basal rate: " + basalRateOutput.textContent + " IE/time\n";
-    text += "Insulinfølsomhed (ISF): " + isfOutput.textContent + " mmol/L per IE\n";
-    text += "Kulhydratratio (ICR): " + icrOutput.textContent + " g/IE\n\n";
-
-    // Pumpespecifikke felter
     if(pump.fields){
-        pump.fields.forEach(f => {
-            const el = document.getElementById("field_"+f.id);
+        pump.fields.forEach(f=>{
+            const el=document.getElementById("field_"+f.id);
             if(!el) return;
 
-            if(f.type==="number" || f.type==="select"){
-                let v = el.value;
+            let v=el.value;
 
-                if(!v || isNaN(parseFloat(v))){
-                    text += (f.label_o || f.label) + ": skal udfyldes senere\n";
-                } else {
-                    text += (f.label_o || f.label) + ": " + parseFloat(v).toFixed(1) + "\n";
-                }
+            if(!v||isNaN(parseFloat(v))){
+                text+=(f.label_o||f.label)+": skal udfyldes senere\n";
+            }else{
+                text+=(f.label_o||f.label)+": "+parseFloat(v).toFixed(1)+"\n";
             }
         });
     }
 
-    navigator.clipboard.writeText(text).then(() => {
-        const status = document.getElementById("copyStatus");
-        status.style.display = "block";
+    navigator.clipboard.writeText(text).then(()=>{
+        const status=document.getElementById("copyStatus");
+        status.style.display="block";
         setTimeout(()=>status.style.display="none",2000);
     });
 }
 
-
-    
 /* Init */
 populatePumpDropdown();
+
+pumpModel.addEventListener("change",()=>{
+    renderPumpFields();
+    calculate();
+});
+
 pumpSwitch.addEventListener("change",calculate);
-pumpModel.addEventListener("change",calculate);
 tdiInput.addEventListener("input",calculate);
-document.getElementById("copyButton").addEventListener("click", copyToClipboard);
+document.getElementById("copyButton").addEventListener("click",copyToClipboard);
+
 </script>
 
 </body>
