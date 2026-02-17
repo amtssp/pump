@@ -203,6 +203,12 @@ function calculate(){
     basalRateOutput.textContent = ((adjusted*0.5)/24).toFixed(2);
     isfOutput.textContent = (100/adjusted).toFixed(1);
     icrOutput.textContent = (500/adjusted).toFixed(0);
+
+  // ✅ Opdater feltet tddi med reduceret TDI
+    if(document.getElementById("field_tddi")){
+        document.getElementById("field_tddi").textContent = adjusted.toFixed(0);
+    }
+    
     updateDisplayFields();
 }
 
