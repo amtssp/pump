@@ -164,8 +164,7 @@ Overvej i de tilfælde at:
 <ul>
 <li>justere insulinfølsomheden</li>
 <li>justere kulhydratratio</li>
-<li>Afhængig af pumpen: ændre basalrate, højt glukosemål osv.</li>
-<li>justere aktiv insulintid</li>
+<li>Afhængig af pumpen: ændre basalrate, højt glukosemål, justere aktiv insulin tid osv.</li>
 </ul>
 </div>
 
@@ -224,8 +223,8 @@ function calculate(){
 
     const adjusted=tdi*0.8;
 
-    basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(2);
-    isfOutput.textContent=(100/adjusted).toFixed(0);
+    basalRateOutput.textContent=((adjusted*0.5)/24).toFixed(1);
+    isfOutput.textContent=(100/adjusted).toFixed(1);
     icrOutput.textContent=(500/adjusted).toFixed(0);
 
     updateDisplayFields();
