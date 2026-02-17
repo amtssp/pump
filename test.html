@@ -47,18 +47,18 @@ input[type="number"], select {
 
 .result-values {
     display:grid;
-    gap:10px; /* mindre mellemrum mellem rækker */
+    gap:10px;
 }
 
 .result-row {
     display:grid;
     grid-template-columns: 1fr auto;
     border-bottom:1px solid #d9e2ec;
-    padding-bottom:4px; /* lidt mindre padding */
+    padding-bottom:4px;
 }
 
 .result-row div:first-child {
-    font-weight:700; /* Fed tekst på labels */
+    font-weight:700;
 }
 
 .value {
@@ -97,7 +97,7 @@ input[type="number"], select {
     border:1px solid #f5b5c8;
     border-radius:6px;
     font-size:0.9rem;
-    margin-bottom:15px; /* lidt afstand under */
+    margin-bottom:15px;
 }
 
 button {
@@ -148,10 +148,6 @@ Jeg skifter fra pen-behandling til insulinpumpe
 
 <div class="note">
 <strong>Info om beregninger:</strong> Pen-dosering reduceres med 20%, dernæst forudsættes en fordeling på 50/50 (basal/bolus). Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes 100-reglen, og for Insulin kulhydrat ratio benyttes 500-reglen.
-
-
-
-
 </div>
 
 <div class="results">
@@ -184,17 +180,6 @@ Ved høj HbA1c kan langsommere korrektion være gavnlig. Værdier kan justeres n
 
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
 </div>
 
 <div id="pumpFieldsContainer" class="pump-fields"></div>
@@ -204,9 +189,6 @@ Ved høj HbA1c kan langsommere korrektion være gavnlig. Værdier kan justeres n
 
 <div class="note">
 <strong>Bemærk:</strong> Dette værktøj er udelukkende til undervisningsbrug og kan ikke erstatte individuel klinisk vurdering. Endelig beslutning træffes af behandlingsansvarlig sundhedsperson.
-
-
-
 </div>    
 
 </div>
@@ -223,6 +205,7 @@ const isfOutput = document.getElementById("isf");
 const icrOutput = document.getElementById("icr");
 const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
 const pumpTitle = document.getElementById("pumpTitle");
+const copyButton = document.getElementById("copyButton");
 
 /* Dropdown */
 function populatePumpDropdown(){
@@ -266,8 +249,6 @@ function updateDisplayFields(adjusted){
         if(f.type === "display"){
             const el = document.getElementById("field_"+f.id);
             if(el) el.textContent = adjusted.toFixed(0);
-
-
         }
     });
 }
@@ -317,16 +298,19 @@ function renderPumpFields(){
         pumpFieldsContainer.appendChild(row);
     });
 
-    updateDisplayFields(tdiInput.value*0.8);
+    updateDisplayFields(parseFloat(tdiInput.value)*0.8);
 }
 
 /* Copy */
 function copyToClipboard(){
+    if(!pumpModel.value) return;
+
     let text = "Insulinpumpe opstartsindstillinger\n";
-    text += "Pumpe: "+ (pumpModel.value ? pumps[pumpModel.value].name : "") + "\n\n";
-    text += "Basal rate: "+basalRateOutput.textContent+" IE/time\n";
-    text += "Insulinfølsomheds Faktor (ISF): "+isfOutput.textContent+" mmol/L per IE\n";
-    text += "KulhydratratioICR: "+icrOutput.textContent+" g/IE\n";
+    text += "=================================\n";
+    text += "Pumpe: "+pumps[pumpModel.value].name+"\n\n";
+    text += `Basal Rate:        ${basalRateOutput.textContent} IE/time\n`;
+    text += `Insulinfølsomhed:  ${isfOutput.textContent} mmol/L per IE\n`;
+    text += `Kulhydratratio:    ${icrOutput.textContent} g/IE\n\n`;
 
     const pump = pumps[pumpModel.value];
     if(pump && pump.fields){
@@ -335,17 +319,13 @@ function copyToClipboard(){
             if(!el) return;
             if(f.type==="number"||f.type==="select"){
                 let v = el.value;
-                if(!v||isNaN(parseFloat(v))){
-                    text += (f.label_o||f.label)+": skal udfyldes senere\n";
-                }else{
-                    text += (f.label_o||f.label)+": "+v+"\n";
-                }
+                text += `${f.label_o||f.label}: ${v ? v : "skal udfyldes"}\n`;
             }
             if(f.type==="checkbox"){
-                text += f.label+": "+(el.checked?"Ja":"Nej")+"\n";
+                text += `${f.label}: ${el.checked?"Ja":"Nej"}\n`;
             }
             if(f.type==="display"){
-                text += f.label+": "+el.textContent+"\n";
+                text += `${f.label}: ${el.textContent}\n`;
             }
         });
     }
@@ -353,28 +333,26 @@ function copyToClipboard(){
     navigator.clipboard.writeText(text).then(()=>{
         const status=document.getElementById("copyStatus");
         status.style.display="block";
-        setTimeout(()=>status.style.display="none",2000);
+        setTimeout(()=>{status.style.display="none";},2000);
     });
 }
 
 /* Init */
 populatePumpDropdown();
+copyButton.disabled = true;
 
 pumpSwitch.addEventListener("change",calculate);
 tdiInput.addEventListener("input",calculate);
 
 pumpModel.addEventListener("change", ()=>{
-    pumpTitle.textContent = pumpModel.value ? pumps[pumpModel.value].name : "Pumpespecifikke indstillinger";
-
-
-
-
+    const selectedPump = pumpModel.value;
+    pumpTitle.textContent = selectedPump ? pumps[selectedPump].name : "Pumpespecifikke indstillinger";
+    copyButton.disabled = !selectedPump;
     renderPumpFields();
     calculate();
 });
 
-document.getElementById("copyButton").addEventListener("click", copyToClipboard);
-
+copyButton.addEventListener("click", copyToClipboard);
 </script>
 
 </body>
