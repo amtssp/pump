@@ -308,9 +308,9 @@ function copyToClipboard(){
     let text = "Insulinpumpe opstartsindstillinger\n";
     text += "=================================\n";
     text += "Pumpe: "+pumps[pumpModel.value].name+"\n\n";
-    text += `Basal Rate:        ${basalRateOutput.textContent} IE/time\n`;
-    text += `Insulinfølsomhed:  ${isfOutput.textContent} mmol/L per IE\n`;
-    text += `Kulhydratratio:    ${icrOutput.textContent} g/IE\n\n`;
+    text += `Basal Rate:                ${basalRateOutput.textContent} IE/time\n`;
+    text += `Insulinfølsomhed:          ${isfOutput.textContent} mmol/L per IE\n`;
+    text += `Kulhydratratio:            ${icrOutput.textContent} g/IE\n\n`;
 
     const pump = pumps[pumpModel.value];
     if(pump && pump.fields){
@@ -322,10 +322,10 @@ function copyToClipboard(){
                 text += `${f.label_o||f.label}: ${v ? v : "skal udfyldes"}\n`;
             }
             if(f.type==="checkbox"){
-                text += `${f.label}: ${el.checked?"Ja":"Nej"}\n`;
+                text += `${f.label}:      ${el.checked?"Ja":"Nej"}\n`;
             }
             if(f.type==="display"){
-                text += `${f.label}: ${el.textContent}\n`;
+                text += `${f.label}:      ${el.textContent}\n`;
             }
         });
     }
