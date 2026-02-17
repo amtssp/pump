@@ -53,7 +53,7 @@ const pumps = {
         min: 2,
         max: 5,
         step: 0.5,
-        label_o: "Aktiv insulintid (2–5 timer)",
+        label_o: "Aktiv insulintid (timer)",
       },
 
       {
