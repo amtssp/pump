@@ -196,8 +196,6 @@ const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
 const pumpTitle = document.getElementById("pumpTitle");
 const copyButton = document.getElementById("copyButton");
 
-let previousPump = "";
-
 /* Dropdown */
 function populatePumpDropdown(){
     Object.keys(pumps).forEach(key=>{
@@ -339,13 +337,6 @@ tdiInput.addEventListener("input", calculate);
 
 pumpModel.addEventListener("change", ()=>{
     const newPump = pumpModel.value;
-    if(previousPump && previousPump !== newPump){
-        tdiInput.value="";
-        basalRateOutput.textContent="";
-        isfOutput.textContent="";
-        icrOutput.textContent="";
-    }
-    previousPump = newPump;
     pumpTitle.textContent = newPump ? pumps[newPump].name : "Pumpespecifikke indstillinger";
     renderPumpFields();
     copyButton.disabled = !newPump;
