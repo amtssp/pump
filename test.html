@@ -305,55 +305,62 @@ function renderPumpFields(){
 function copyToClipboard(){
     if(!pumpModel.value) return;
 
+    const pump = pumps[pumpModel.value];
+    if(!pump) return;
+
     let text = "Insulinpumpe opstartsindstillinger\n";
     text += "=================================\n";
-    text += "Pumpe: "+pumps[pumpModel.value].name+"\n\n";
+    text += "Pumpe: "+pump.name+"\n\n";
 
-    // Beregn længste label fra standard output
-    const labels = ["Basal Rate", "Insulinfølsomhed", "Kulhydratratio"];
-    const values = [basalRateOutput.textContent + " IE/time",
-                    isfOutput.textContent + " mmol/L per IE",
-                    icrOutput.textContent + " g/IE"];
+    // Standardfelter
+    const standardLabels = ["Basal Rate","Insulinfølsomhed","Kulhydratratio"];
+    const standardValues = [
+        basalRateOutput.textContent + " IE/time",
+        isfOutput.textContent + " mmol/L per IE",
+        icrOutput.textContent + " g/IE"
+    ];
 
-    const maxLen = Math.max(...labels.map(l=>l.length));
+    // Pumpespecifikke labels
+    const pumpLabels = pump.fields.map(f => f.label_o || f.label);
 
-    // Tilføj standard output med ens kolonnebredde
-    for(let i=0;i<labels.length;i++){
-        text += labels[i].padEnd(maxLen + 4) + values[i] + "\n";
+    // Beregn max længde for alle labels
+    const allLabels = standardLabels.concat(pumpLabels);
+    const maxLen = Math.max(...allLabels.map(l => l.length));
+
+    // Tilføj standardfelter
+    for(let i=0;i<standardLabels.length;i++){
+        text += standardLabels[i].padEnd(maxLen + 4) + standardValues[i] + "\n";
     }
     text += "\n";
 
-    const pump = pumps[pumpModel.value];
-    if(pump && pump.fields){
-        // Find længste label blandt pumpespecifikke felter
-        let pumpLabels = pump.fields.map(f => (f.label_o || f.label));
-        let maxPumpLen = Math.max(...pumpLabels.map(l => l.length));
+    // Tilføj pumpespecifikke felter
+    pump.fields.forEach(f=>{
+        const el = document.getElementById("field_"+f.id);
+        if(!el) return;
+        const labelText = (f.label_o || f.label).padEnd(maxLen + 4);
 
-        pump.fields.forEach(f=>{
-            const el = document.getElementById("field_"+f.id);
-            if(!el) return;
-
-            let labelText = (f.label_o || f.label).padEnd(maxPumpLen + 4);
-            if(f.type==="number"||f.type==="select"){
-                let v = el.value;
-                text += labelText + (v ? v : "skal udfyldes") + "\n";
-            }
-            if(f.type==="checkbox"){
-                text += labelText + (el.checked?"Ja":"Nej") + "\n";
-            }
-            if(f.type==="display"){
-                text += labelText + el.textContent + "\n";
-            }
-        });
-    }
+        if(f.type==="number" || f.type==="select"){
+            let v = el.value;
+            text += labelText + (v ? v : "skal udfyldes") + "\n";
+        }
+        if(f.type==="checkbox"){
+            text += labelText + (el.checked ? "Ja" : "Nej") + "\n";
+        }
+        if(f.type==="display"){
+            text += labelText + el.textContent + "\n";
+        }
+    });
 
     navigator.clipboard.writeText(text).then(()=>{
-        const status=document.getElementById("copyStatus");
+        const status = document.getElementById("copyStatus");
         status.style.display="block";
         setTimeout(()=>{status.style.display="none";},2000);
     });
 }
 
+    
+
+    
     
 /* Init */
 populatePumpDropdown();
