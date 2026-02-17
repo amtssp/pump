@@ -7,14 +7,14 @@
 <style>
 body {
     font-family: Arial, sans-serif;
-    margin: 40px;
+    margin: 20px;
     background-color: #f4f6f8;
 }
 
 .container {
     max-width: 950px;
     background: white;
-    padding: 30px;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
@@ -26,11 +26,12 @@ label {
 input[type="number"], select {
     width:100%;
     padding:6px;
+    box-sizing:border-box;
 }
 
 .results {
-    margin-top:30px;
-    padding:25px;
+    margin-top:20px;
+    padding:20px;
     background:#eef3f7;
     border-radius:6px;
     display:flex;
@@ -40,19 +41,20 @@ input[type="number"], select {
 .result-grid {
     display:grid;
     grid-template-columns: 1fr 320px;
-    gap:40px;
+    gap:30px;
     flex-grow:1;
 }
 
 .result-values {
     display:grid;
-    gap:18px;
+    gap:10px; /* mindre mellemrum mellem rækker */
 }
+
 .result-row {
     display:grid;
     grid-template-columns: 1fr auto;
     border-bottom:1px solid #d9e2ec;
-    padding-bottom:6px;
+    padding-bottom:4px; /* lidt mindre padding */
 }
 
 .result-row div:first-child {
@@ -65,15 +67,15 @@ input[type="number"], select {
 }
 
 .pump-fields {
-    margin-top:30px;
+    margin-top:20px;
     display:grid;
-    gap:16px;
+    gap:12px;
 }
 
 .pump-field-row {
     display:grid;
     grid-template-columns: 1fr 200px;
-    gap:20px;
+    gap:16px;
     align-items:center;
 }
 
@@ -81,30 +83,31 @@ input[type="number"], select {
 .pump-field-row select,
 .pump-field-row div {
     width: 100%;
-    padding: 6px;
+    padding: 5px;
     box-sizing: border-box;
     background-color: #f4f6f8;
     border: 1px solid #d9e2ec;
     border-radius: 4px;
-    min-height: 32px;
+    min-height: 30px;
 }
 
 .info-box {
-    padding:18px;
+    padding:15px;
     background:#ffe6ef;
     border:1px solid #f5b5c8;
     border-radius:6px;
     font-size:0.9rem;
+    margin-bottom:15px; /* lidt afstand under */
 }
 
 button {
-    margin-top:25px;
-    padding:10px 16px;
+    margin-top:20px;
+    padding:8px 14px;
 }
 
 #copyStatus {
-    margin-top:10px;
-    padding:8px;
+    margin-top:8px;
+    padding:6px;
     background:#d4edda;
     color:#155724;
     border-radius:4px;
@@ -114,9 +117,9 @@ button {
 .note {
     font-size:12px;
     color:#666;
-    margin-top:20px;
+    margin-top:15px;
     border-top:1px solid #ccc;
-    padding-top:15px;
+    padding-top:10px;
 }
 </style>
 </head>
@@ -144,14 +147,15 @@ Jeg skifter fra pen-behandling til insulinpumpe
 </select>
 
 <div class="note">
-<strong>Info om beregninger:</strong><br>
-Pen-dosering reduceres med 20% dernæst forudsættes en <b>fordeling på 50/50 (basal/bolus)</b>.<br>
-Basalen fordeles over 24 timer (=basalrate).<br>
-For Insulinfølsomhed benyttes <b>100-reglen</b>.<br>
-For Insulin kulhydrat ratio benyttes <b>500-reglen</b>.
+<strong>Info om beregninger:</strong> Pen-dosering reduceres med 20%, dernæst forudsættes en fordeling på 50/50 (basal/bolus). Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes 100-reglen, og for Insulin kulhydrat ratio benyttes 500-reglen.
 </div>
 
 <div class="results">
+
+<div class="info-box">
+<strong>Klinisk overvejelse</strong><br>
+Ved høj HbA1c kan langsommere korrektion være gavnlig. Værdier kan justeres når de indsættes i EPJ: justere insulinfølsomhed, kulhydratratio, basalrate, højt glukosemål eller aktiv insulin tid afhængig af pumpen.
+</div>
 
 <h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
 
@@ -176,17 +180,6 @@ For Insulin kulhydrat ratio benyttes <b>500-reglen</b>.
 
 </div>
 
-<div class="info-box">
-<strong>Klinisk overvejelse</strong><br><br>
-Ved høj HbA1c kan langsommere korrektion være gavnlig.<br><br>
-Værdier kan justeres når de indsættes i EPJ:
-<ul>
-<li>justere insulinfølsomheden</li>
-<li>justere kulhydratratio</li>
-<li>Afhængig af pumpen: ændre basalrate, højt glukosemål, justere aktiv insulin tid osv.</li>
-</ul>
-</div>
-
 </div>
 
 <div id="pumpFieldsContainer" class="pump-fields"></div>
@@ -195,10 +188,7 @@ Værdier kan justeres når de indsættes i EPJ:
 <div id="copyStatus">✔ Tekst kopieret</div>
 
 <div class="note">
-<strong>Bemærk:</strong><br>
-Dette værktøj er udelukkende udviklet til undervisningsbrug.<br>
-Beregningerne kan ikke erstatte individuel klinisk vurdering.<br>
-Det er altid den behandlingsansvarlige sundhedsperson, der skal tage endelig stilling.
+<strong>Bemærk:</strong> Dette værktøj er udelukkende til undervisningsbrug og kan ikke erstatte individuel klinisk vurdering. Endelig beslutning træffes af behandlingsansvarlig sundhedsperson.
 </div>    
     
 </div>
@@ -229,7 +219,6 @@ function populatePumpDropdown(){
 /* Beregning */
 function calculate(){
     const tdi=parseFloat(tdiInput.value);
-
     if(!pumpSwitch.checked || !tdi){
         basalRateOutput.textContent="";
         isfOutput.textContent="";
@@ -250,21 +239,17 @@ function calculate(){
 function updateDisplayFields(adjusted){
     const selected = pumpModel.value;
     if(!selected) return;
-
     const pump = pumps[selected];
     if(!pump.fields) return;
-
     pump.fields.forEach(f=>{
         if(f.type === "display"){
             const el = document.getElementById("field_"+f.id);
-            if(el){
-                el.textContent = adjusted.toFixed(0);
-            }
+            if(el) el.textContent = adjusted.toFixed(0);
         }
     });
 }
 
-/* Render pump felter dynamisk */
+/* Render pump felter */
 function renderPumpFields(){
     pumpFieldsContainer.innerHTML="";
     const selected = pumpModel.value;
@@ -308,7 +293,6 @@ function renderPumpFields(){
         row.appendChild(input);
         pumpFieldsContainer.appendChild(row);
     });
-
     updateDisplayFields(tdiInput.value*0.8);
 }
 
@@ -351,22 +335,16 @@ function copyToClipboard(){
 
 /* Init */
 populatePumpDropdown();
-
 pumpSwitch.addEventListener("change",calculate);
 tdiInput.addEventListener("input",calculate);
 
 pumpModel.addEventListener("change", ()=>{
-    if(pumpModel.value){
-        pumpTitle.textContent = pumps[pumpModel.value].name;
-    } else {
-        pumpTitle.textContent = "Pumpespecifikke indstillinger";
-    }
+    pumpTitle.textContent = pumpModel.value ? pumps[pumpModel.value].name : "Pumpespecifikke indstillinger";
     renderPumpFields();
     calculate();
 });
 
 document.getElementById("copyButton").addEventListener("click", copyToClipboard);
-
 </script>
 
 </body>
