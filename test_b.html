@@ -45,9 +45,11 @@ input[type="number"], select {
     flex-grow:1;
 }
 
+/* ✅ Margin-løsning: flytter alle felter mod højre */
 .result-values {
     display:grid;
     gap:10px;
+    margin-left: 40px; /* Juster dette tal for hvor langt til højre */
 }
 
 /* RESULT ROWS (beregnede værdier) */
@@ -71,8 +73,6 @@ input[type="number"], select {
     gap:8px;  /* afstand mellem input og enhed */
 }
 
-
-    
 /* ✅ ENS INPUTBREDE */
 .calc-input {
     width:110px;
@@ -83,11 +83,12 @@ input[type="number"], select {
     border-radius:4px;
 }
 
-/* ✅ ALIGN MED RESULT-RÆKKER */
+/* ✅ ALIGN MED RESULT-RÆKKER + margin-løsning */
 .pump-fields {
     margin-top:20px;
     display:grid;
     gap:12px;
+    margin-left: 40px; /* Samme som .result-values for alignment */
 }
 
 /* Pump-felter */
@@ -141,8 +142,7 @@ button {
     margin-top:15px;
     border-top:1px solid #ccc;
     padding-top:10px;
-}
-</style>
+}</style>
 </head>
 
 <body>
