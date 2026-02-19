@@ -50,25 +50,27 @@ input[type="number"], select {
     gap:10px;
 }
 
-/* ✅ JUSTERET */
+/* RESULT ROWS (beregnede værdier) */
 .result-row {
     display:grid;
-    grid-template-columns: 1fr 220px;
-    border-bottom:1px solid #d9e2ec;
-    padding-bottom:4px;
+    grid-template-columns: 200px 1fr; /* Label og input+enhed */
+    gap:10px;
     align-items:center;
+    padding-bottom:4px;
+    border-bottom:1px solid #d9e2ec;
 }
 
 .result-row div:first-child {
     font-weight:700;
 }
 
-/* ✅ JUSTERET */
+/* Input + enhed flex */
 .value {
     display:flex;
     align-items:center;
-    justify-content:space-between;   /* ÆNDRET */
+    gap:8px;  /* afstand mellem input og enhed */
 }
+
 
     
 /* ✅ ENS INPUTBREDE */
@@ -88,13 +90,15 @@ input[type="number"], select {
     gap:12px;
 }
 
+/* Pump-felter */
 .pump-field-row {
     display:grid;
-    grid-template-columns: 1fr 220px;
+    grid-template-columns: 200px 1fr; /* Samme grid som result-row */
     align-items:center;
+    gap:10px; /* Samme som result-row */
 }
 
-
+/* Input styling */
 .calc-input,
 .pump-field-row input,
 .pump-field-row select,
@@ -107,7 +111,6 @@ input[type="number"], select {
     border:1px solid #d9e2ec;
     border-radius:4px;
 }
-
     
 .info-box {
     padding:15px;
