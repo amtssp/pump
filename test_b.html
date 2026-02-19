@@ -53,11 +53,12 @@ input[type="number"], select {
 /* RESULT ROWS (beregnede værdier) */
 .result-row {
     display:grid;
-    grid-template-columns: minmax(200px, 1fr) 1fr; /* Label | input+enhed */
-    gap:10px; /* Afstand mellem label og felt */
+    grid-template-columns: 220px 1fr; /* Faste kolonner for label og input+enhed */
+    gap:10px; 
     align-items:center;
     padding-bottom:4px;
     border-bottom:1px solid #d9e2ec;
+    word-break: break-word; /* Lange labels omskrives */
 }
 
 .result-row div:first-child {
@@ -91,7 +92,7 @@ input[type="number"], select {
 /* Pump-felter */
 .pump-field-row {
     display:grid;
-    grid-template-columns: minmax(200px, 1fr) 1fr; /* Label | input+enhed */
+    grid-template-columns: 220px 1fr; /* Samme kolonner som result-row */
     gap:10px;
     align-items:center;
 }
@@ -140,7 +141,6 @@ button {
     border-top:1px solid #ccc;
     padding-top:10px;
 }
-
 </style>
 </head>
 
