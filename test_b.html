@@ -305,7 +305,7 @@ if(f.type==="number"){
     if (f.min !== undefined) input.min = f.min;
     if (f.max !== undefined) input.max = f.max;
 
-    // 🔒 Beholder din nuværende range-clamp ved change
+    // 🔒 Range-clamp ved change
     input.addEventListener("change", () => {
         const value = parseFloat(input.value);
         if (isNaN(value)) return;
@@ -317,9 +317,16 @@ if(f.type==="number"){
         if (f.max !== undefined && value > f.max) {
             input.value = f.max;
         }
+
+        // 🎨 Opdater farve efter evt. automatisk rettelse
+        if (!input.checkValidity()) {
+            input.style.backgroundColor = "#ffd6e0";
+        } else {
+            input.style.backgroundColor = "#f4f6f8";
+        }
     });
 
-    // 🎨 Vis lyserød ved ugyldig værdi
+    // 🎨 Vis lyserød ved ugyldig værdi under indtastning
     input.addEventListener("input", () => {
         if (!input.checkValidity()) {
             input.style.backgroundColor = "#ffd6e0";
@@ -328,6 +335,7 @@ if(f.type==="number"){
         }
     });
 }
+
         if(f.type==="select"){
             input = document.createElement("select");
             const empty = document.createElement("option");
