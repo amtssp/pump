@@ -67,10 +67,10 @@ input[type="number"], select {
 .value {
     display:flex;
     align-items:center;
-    justify-content:flex-end;
-    gap:6px;
+    justify-content:space-between;   /* ÆNDRET */
 }
 
+    
 /* ✅ ENS INPUTBREDE */
 .calc-input {
     width:110px;
@@ -94,18 +94,21 @@ input[type="number"], select {
     align-items:center;
 }
 
+
+.calc-input,
 .pump-field-row input,
 .pump-field-row select,
 .pump-field-row div {
-    width:110px;
+    width:100%;
+    max-width:110px;
     padding:5px;
     box-sizing:border-box;
     background-color:#f4f6f8;
     border:1px solid #d9e2ec;
     border-radius:4px;
-    min-height:30px;
 }
 
+    
 .info-box {
     padding:15px;
     background:#ffe6ef;
