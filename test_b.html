@@ -53,8 +53,8 @@ input[type="number"], select {
 /* RESULT ROWS (beregnede værdier) */
 .result-row {
     display:grid;
-    grid-template-columns: 200px 1fr; /* Label og input+enhed */
-    gap:10px;
+    grid-template-columns: 200px 1fr; /* Label | input+enhed */
+    gap:20px; /* Afstand mellem label og felt */
     align-items:center;
     padding-bottom:4px;
     border-bottom:1px solid #d9e2ec;
@@ -64,15 +64,14 @@ input[type="number"], select {
     font-weight:700;
 }
 
-/* Input + enhed flex, rykket mod højre */
+/* Input + enhed flex */
 .value {
     display:flex;
     align-items:center;
     gap:8px;  /* afstand mellem input og enhed */
-    margin-left: 50px; /* flytter felterne mod højre uden at flytte label */
 }
 
-/* ✅ ENS INPUTBREDE */
+/* ENS INPUTBREDE */
 .calc-input {
     width:110px;
     padding:5px;
@@ -82,7 +81,7 @@ input[type="number"], select {
     border-radius:4px;
 }
 
-/* ✅ ALIGN MED RESULT-RÆKKER */
+/* PUMP-FELTER */
 .pump-fields {
     margin-top:20px;
     display:grid;
@@ -94,10 +93,10 @@ input[type="number"], select {
     display:grid;
     grid-template-columns: 200px 1fr; /* Samme grid som result-row */
     align-items:center;
-    gap:10px; /* Samme som result-row */
+    gap:20px; /* Samme afstand som .result-row */
 }
 
-/* Input styling */
+/* Input styling (beregnede og pump-felter) */
 .calc-input,
 .pump-field-row input,
 .pump-field-row select,
@@ -110,8 +109,7 @@ input[type="number"], select {
     border:1px solid #d9e2ec;
     border-radius:4px;
 }
-
-/* INFOBOX */
+    
 .info-box {
     padding:15px;
     background:#ffe6ef;
@@ -121,7 +119,6 @@ input[type="number"], select {
     margin-bottom:15px;
 }
 
-/* BUTTON */
 button {
     margin-top:20px;
     padding:8px 14px;
@@ -142,7 +139,6 @@ button {
     margin-top:15px;
     border-top:1px solid #ccc;
     padding-top:10px;
-}
 }
 </style>
 </head>
