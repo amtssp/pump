@@ -167,7 +167,7 @@ const pumps = {
         label: "Vælg aktiv insulintid (2–8 timer)",
         min: 2,
         max: 8,
-        step: 0.15,
+        step: 0.5,
         label_o: "Aktiv insulintid (timer)",
       },
 
