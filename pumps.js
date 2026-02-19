@@ -160,6 +160,16 @@ const pumps = {
         id: "reverse",
         label: "Omvendt korrektion aktiv"
       },
+        
+      {
+        type: "number",
+        id: "ait",
+        label: "Vælg aktiv insulintid (2–8 timer)",
+        min: 2,
+        max: 5,
+        step: 0.5,
+        label_o: "Aktiv insulintid (timer)",
+      },
 
       {
         type: "number",
