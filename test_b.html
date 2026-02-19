@@ -296,11 +296,15 @@ function renderPumpFields(){
         label.textContent = f.label;
 
         let input;
-        if(f.type==="number"){
-            input = document.createElement("input");
-            input.type = "number";
-            input.step = f.step || "0.1";
-        }
+if(f.type==="number"){
+    input = document.createElement("input");
+    input.type = "number";
+
+    input.step = f.step || "0.1";
+
+    if (f.min !== undefined) input.min = f.min;
+    if (f.max !== undefined) input.max = f.max;
+}
         if(f.type==="select"){
             input = document.createElement("select");
             const empty = document.createElement("option");
