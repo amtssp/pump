@@ -5,7 +5,6 @@
 <title>Insulinpumpe Opstarts Beregner</title>
 
 <style>
-/* --- CSS ER UÆNDRET --- */
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
@@ -141,14 +140,13 @@ button {
 <body>
 <div class="container">
 
-<h2>Insulinpumpe Opstarts Beregner [BARN]</h2>
+<h2>Insulinpumpe Opstarts Beregner</h2>
 
 <label>
 <input type="checkbox" id="pumpSwitch">
 Jeg skifter fra pen-behandling til insulinpumpe, og ønsker nedenstående beregning.
 </label>
 
-<!-- 🔹 Info-tekst indlæses nu fra barn_beregning.js -->
 <div id="infoContainer"></div>
 
 <br><br>
@@ -212,39 +210,155 @@ Automatisk beregnet – kan justeres
 <div id="copyStatus">✔ Tekst kopieret</div>
 
 <div class="note">
-<strong>Bemærk:</strong> Dette værktøj er udelukkende til undervisningsbrug og kan ikke erstatte individuel klinisk vurdering. Endelig beslutning træffes af behandlingsansvarlig sundhedsperson.
+<strong>Bemærk:</strong> Dette værktøj er udelukkende til undervisningsbrug og kan ikke erstatte individuel klinisk vurdering.
 </div>
 
 </div>
 
 <script src="pumps.js"></script>
-<script src="barn_beregning.js"></script>
 
 <script>
-/* 🔹 HER ER DIT SCRIPT – UÆNDRET, UNDTAGEN BEREGNINGEN */
+/* =========================================
+   KONFIGURATION – SKIFT KUN HER
+   ========================================= */
+const beregningstype = "barn";   // "barn" eller "voksen"
 
-document.getElementById("infoContainer").innerHTML = getInfoTextBarn();
 
-function calculate(){
-    const tdi=parseFloat(tdiInput.value);
+/* =========================================
+   Dynamisk indlæsning af beregningsfil
+   ========================================= */
+const beregningsScript = document.createElement("script");
+beregningsScript.src = beregningstype + "_beregning.js";
 
-    if(!pumpSwitch.checked || !tdi){
-        basalRateOutput.value="";
-        isfOutput.value="";
-        icrOutput.value="";
-        return;
+beregningsScript.onload = function(){
+
+    document.getElementById("infoContainer").innerHTML = getInfoText();
+
+    const pumpSwitch = document.getElementById("pumpSwitch");
+    const pumpModel = document.getElementById("pumpModel");
+    const tdiInput = document.getElementById("tdi");
+
+    const basalRateOutput = document.getElementById("basalRate");
+    const isfOutput = document.getElementById("isf");
+    const icrOutput = document.getElementById("icr");
+    const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
+    const pumpTitle = document.getElementById("pumpTitle");
+    const copyButton = document.getElementById("copyButton");
+
+    function populatePumpDropdown(){
+        Object.keys(pumps).forEach(key=>{
+            const option=document.createElement("option");
+            option.value=key;
+            option.textContent=pumps[key].name;
+            pumpModel.appendChild(option);
+        });
     }
 
-    const adjusted = tdi * 0.8;
+    function calculate(){
+        const tdi=parseFloat(tdiInput.value);
 
-    const result = calculateBarnSettings(adjusted);
+        if(!pumpSwitch.checked || !tdi){
+            basalRateOutput.value="";
+            isfOutput.value="";
+            icrOutput.value="";
+            return;
+        }
 
-    basalRateOutput.value = result.basalRate;
-    isfOutput.value = result.isf;
-    icrOutput.value = result.icr;
+        const adjusted = tdi * 0.8;
+        const result = calculateSettings(adjusted);
 
-    updateDisplayFields(adjusted);
-}
+        basalRateOutput.value = result.basalRate;
+        isfOutput.value = result.isf;
+        icrOutput.value = result.icr;
+
+        updateDisplayFields(adjusted);
+    }
+
+    function updateDisplayFields(adjusted){
+        const selected = pumpModel.value;
+        if(!selected) return;
+
+        const pump = pumps[selected];
+        if(!pump.fields) return;
+
+        pump.fields.forEach(f=>{
+            if(f.type === "display"){
+                const el = document.getElementById("field_"+f.id);
+                if(el) el.textContent = adjusted.toFixed(0);
+            }
+        });
+    }
+
+    function renderPumpFields(){
+        pumpFieldsContainer.innerHTML="";
+        const selected = pumpModel.value;
+        if(!selected) return;
+        const pump = pumps[selected];
+
+        pump.fields.forEach(f=>{
+            const row = document.createElement("div");
+            row.className = "pump-field-row";
+
+            const label = document.createElement("label");
+            label.textContent = f.label;
+
+            let input;
+
+            if(f.type==="number"){
+                input = document.createElement("input");
+                input.type = "number";
+                input.step = f.step || "0.1";
+                if (f.min !== undefined) input.min = f.min;
+                if (f.max !== undefined) input.max = f.max;
+            }
+
+            if(f.type==="select"){
+                input = document.createElement("select");
+                const empty = document.createElement("option");
+                empty.value=""; empty.textContent="-- vælg --";
+                input.appendChild(empty);
+                f.options.forEach(opt=>{
+                    const option = document.createElement("option");
+                    option.value = opt;
+                    option.textContent = opt;
+                    input.appendChild(option);
+                });
+            }
+
+            if(f.type==="checkbox"){
+                input = document.createElement("input");
+                input.type = "checkbox";
+            }
+
+            if(f.type==="display"){
+                input = document.createElement("div");
+            }
+
+            input.id = "field_"+f.id;
+            row.appendChild(label);
+            row.appendChild(input);
+            pumpFieldsContainer.appendChild(row);
+        });
+
+        updateDisplayFields(parseFloat(tdiInput.value)*0.8);
+    }
+
+    populatePumpDropdown();
+    copyButton.disabled = true;
+
+    pumpSwitch.addEventListener("change",calculate);
+    tdiInput.addEventListener("input",calculate);
+
+    pumpModel.addEventListener("change", ()=>{
+        const selectedPump = pumpModel.value;
+        pumpTitle.textContent = selectedPump ? pumps[selectedPump].name : "Pumpespecifikke indstillinger";
+        copyButton.disabled = !selectedPump;
+        renderPumpFields();
+        calculate();
+    });
+};
+
+document.head.appendChild(beregningsScript);
 </script>
 
 </body>
