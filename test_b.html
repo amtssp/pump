@@ -5,6 +5,7 @@
 <title>Insulinpumpe Opstarts Beregner</title>
 
 <style>
+/* --- CSS ER UÆNDRET --- */
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
@@ -50,11 +51,10 @@ input[type="number"], select {
     gap:10px;
 }
 
-/* RESULT ROWS (beregnede værdier) */
 .result-row {
     display:grid;
-    grid-template-columns: 300px 1fr; /* Label | input+enhed, første kolonne bredere */
-    gap:10px; /* Afstand mellem label og felt */
+    grid-template-columns: 300px 1fr;
+    gap:10px;
     align-items:center;
     padding-bottom:4px;
     border-bottom:1px solid #d9e2ec;
@@ -64,14 +64,12 @@ input[type="number"], select {
     font-weight:700;
 }
 
-/* Input + enhed flex */
 .value {
     display:flex;
     align-items:center;
-    gap:8px;  /* afstand mellem input og enhed */
+    gap:8px;
 }
 
-/* ENS INPUTBREDE */
 .calc-input {
     width:110px;
     padding:5px;
@@ -81,22 +79,19 @@ input[type="number"], select {
     border-radius:4px;
 }
 
-/* PUMP-FELTER */
 .pump-fields {
     margin-top:20px;
     display:grid;
     gap:12px;
 }
 
-/* Pump-felter */
 .pump-field-row {
     display:grid;
-    grid-template-columns: 300px 1fr; /* Samme som result-row */
-    gap:10px; /* Afstand mellem label og felt */
+    grid-template-columns: 300px 1fr;
+    gap:10px;
     align-items:center;
 }
 
-/* Input styling (beregnede og pump-felter) */
 .calc-input,
 .pump-field-row input,
 .pump-field-row select,
@@ -153,9 +148,8 @@ button {
 Jeg skifter fra pen-behandling til insulinpumpe, og ønsker nedenstående beregning.
 </label>
 
-<div class="note">
-<strong>Info om beregninger:</strong> Pen-dosering reduceres med 20%, dernæst forudsættes en fordeling på <b>40/60</b> (basal/bolus). Basalen fordeles over 24 timer (=basalrate). For Insulinfølsomhed benyttes <b>100-reglen</b>, og for Insulin kulhydrat ratio benyttes <b>450-reglen</b>.
-</div>
+<!-- 🔹 Info-tekst indlæses nu fra barn_beregning.js -->
+<div id="infoContainer"></div>
 
 <br><br>
 
@@ -224,29 +218,12 @@ Automatisk beregnet – kan justeres
 </div>
 
 <script src="pumps.js"></script>
+<script src="barn_beregning.js"></script>
 
 <script>
-/* 🔹 HER ER HELE DIT OPRINDELIGE SCRIPT – UÆNDRET */
+/* 🔹 HER ER DIT SCRIPT – UÆNDRET, UNDTAGEN BEREGNINGEN */
 
-const pumpSwitch = document.getElementById("pumpSwitch");
-const pumpModel = document.getElementById("pumpModel");
-const tdiInput = document.getElementById("tdi");
-
-const basalRateOutput = document.getElementById("basalRate");
-const isfOutput = document.getElementById("isf");
-const icrOutput = document.getElementById("icr");
-const pumpFieldsContainer = document.getElementById("pumpFieldsContainer");
-const pumpTitle = document.getElementById("pumpTitle");
-const copyButton = document.getElementById("copyButton");
-
-function populatePumpDropdown(){
-    Object.keys(pumps).forEach(key=>{
-        const option=document.createElement("option");
-        option.value=key;
-        option.textContent=pumps[key].name;
-        pumpModel.appendChild(option);
-    });
-}
+document.getElementById("infoContainer").innerHTML = getInfoTextBarn();
 
 function calculate(){
     const tdi=parseFloat(tdiInput.value);
@@ -260,176 +237,14 @@ function calculate(){
 
     const adjusted = tdi * 0.8;
 
-    basalRateOutput.value = ((adjusted*0.4)/24).toFixed(2);
-    isfOutput.value = (100/adjusted).toFixed(1);
-    icrOutput.value = (450/adjusted).toFixed(0);
+    const result = calculateBarnSettings(adjusted);
+
+    basalRateOutput.value = result.basalRate;
+    isfOutput.value = result.isf;
+    icrOutput.value = result.icr;
 
     updateDisplayFields(adjusted);
 }
-
-function updateDisplayFields(adjusted){
-    const selected = pumpModel.value;
-    if(!selected) return;
-
-    const pump = pumps[selected];
-    if(!pump.fields) return;
-
-    pump.fields.forEach(f=>{
-        if(f.type === "display"){
-            const el = document.getElementById("field_"+f.id);
-            if(el) el.textContent = adjusted.toFixed(0);
-        }
-    });
-}
-
-function renderPumpFields(){
-    pumpFieldsContainer.innerHTML="";
-    const selected = pumpModel.value;
-    if(!selected) return;
-    const pump = pumps[selected];
-
-    pump.fields.forEach(f=>{
-        const row = document.createElement("div");
-        row.className = "pump-field-row";
-
-        const label = document.createElement("label");
-        label.textContent = f.label;
-
-        let input;
-if(f.type==="number"){
-    input = document.createElement("input");
-    input.type = "number";
-
-    input.step = f.step || "0.1";
-
-    if (f.min !== undefined) input.min = f.min;
-    if (f.max !== undefined) input.max = f.max;
-
-    // 🔒 Range-clamp ved change
-    input.addEventListener("change", () => {
-        const value = parseFloat(input.value);
-        if (isNaN(value)) return;
-
-        if (f.min !== undefined && value < f.min) {
-            input.value = f.min;
-        }
-
-        if (f.max !== undefined && value > f.max) {
-            input.value = f.max;
-        }
-
-        // 🎨 Opdater farve efter evt. automatisk rettelse
-        if (!input.checkValidity()) {
-            input.style.backgroundColor = "#ffd6e0";
-        } else {
-            input.style.backgroundColor = "#f4f6f8";
-        }
-    });
-
-    // 🎨 Vis lyserød ved ugyldig værdi under indtastning
-    input.addEventListener("input", () => {
-        if (!input.checkValidity()) {
-            input.style.backgroundColor = "#ffd6e0";
-        } else {
-            input.style.backgroundColor = "#f4f6f8";
-        }
-    });
-}
-
-        if(f.type==="select"){
-            input = document.createElement("select");
-            const empty = document.createElement("option");
-            empty.value=""; empty.textContent="-- vælg --";
-            input.appendChild(empty);
-            f.options.forEach(opt=>{
-                const option = document.createElement("option");
-                option.value = opt;
-                option.textContent = opt;
-                input.appendChild(option);
-            });
-        }
-        if(f.type==="checkbox"){
-            input = document.createElement("input");
-            input.type = "checkbox";
-        }
-        if(f.type==="display"){
-            input = document.createElement("div");
-        }
-
-        input.id = "field_"+f.id;
-        row.appendChild(label);
-        row.appendChild(input);
-        pumpFieldsContainer.appendChild(row);
-    });
-
-    updateDisplayFields(parseFloat(tdiInput.value)*0.8);
-}
-
-function copyToClipboard(){
-    if(!pumpModel.value) return;
-
-    const pump = pumps[pumpModel.value];
-    if(!pump) return;
-
-    let text = "Insulinpumpe opstartsindstillinger\n";
-    text += "=================================\n";
-    text += "Pumpe: "+pump.name+"\n\n";
-
-    const standardLabels = ["Basal Rate","Insulinfølsomhed","Kulhydratratio"];
-    const standardValues = [
-        basalRateOutput.value + " IE/time",
-        isfOutput.value + " mmol/L per IE",
-        icrOutput.value + " g/IE"
-    ];
-
-    const pumpLabels = pump.fields.map(f => f.label_o || f.label);
-    const allLabels = standardLabels.concat(pumpLabels);
-    const maxLen = Math.max(...allLabels.map(l => l.length));
-
-    for(let i=0;i<standardLabels.length;i++){
-        text += standardLabels[i].padEnd(maxLen + 4) + standardValues[i] + "\n";
-    }
-    text += "\n";
-
-    pump.fields.forEach(f=>{
-        const el = document.getElementById("field_"+f.id);
-        if(!el) return;
-        const labelText = (f.label_o || f.label).padEnd(maxLen + 4);
-
-        if(f.type==="number" || f.type==="select"){
-            let v = el.value;
-            text += labelText + (v ? v : "skal udfyldes") + "\n";
-        }
-        if(f.type==="checkbox"){
-            text += labelText + (el.checked ? "Ja" : "Nej") + "\n";
-        }
-        if(f.type==="display"){
-            text += labelText + el.textContent + "\n";
-        }
-    });
-
-    navigator.clipboard.writeText(text).then(()=>{
-        const status = document.getElementById("copyStatus");
-        status.style.display="block";
-        setTimeout(()=>{status.style.display="none";},2000);
-    });
-}
-
-populatePumpDropdown();
-copyButton.disabled = true;
-
-pumpSwitch.addEventListener("change",calculate);
-tdiInput.addEventListener("input",calculate);
-
-pumpModel.addEventListener("change", ()=>{
-    const selectedPump = pumpModel.value;
-    pumpTitle.textContent = selectedPump ? pumps[selectedPump].name : "Pumpespecifikke indstillinger";
-    copyButton.disabled = !selectedPump;
-    renderPumpFields();
-    calculate();
-});
-
-copyButton.addEventListener("click", copyToClipboard);
 </script>
 
 </body>
