@@ -95,49 +95,48 @@ window.pumps = {
      YPSOPUMP
   ===================================================== */
   ypso: {
-    name: "YpsoPump",
+  name: "YpsoPump",
 
-    fields: [
+  fields: [
 
-      {
-        type: "display",
-        id: "tddi",
-        label: "Total daglig insulin (IE)"
-      },
+    {
+      type: "display",
+      id: "tddi",
+      label: "Total daglig insulin (IE)"
+    },
 
-      {
-        type: "number",
-        id: "weight",
-        label: "Angiv kropsvægt (kg)",
-        step: 0.1,
-        label_o: "Kropsvægt (kg)",
-      },
+    {
+      type: "number",
+      id: "weight",
+      label: "Angiv kropsvægt (kg)",
+      step: 0.1,
+      label_o: "Kropsvægt (kg)"
+    },
 
-      {
-        type: "number",
-        id: "target",
-        label: "Vælg glukosemål (mmol/l)",
-        min: 4.4,
-        max: 11,
-        step: 0.5,
-        label_o: "Glukosemål (mmol/l)",
-      }
+    {
+      type: "number",
+      id: "target",
+      label: "Vælg glukosemål (mmol/l)",
+      min: 4.4,
+      max: 11,
+      step: 0.5,
+      label_o: "Glukosemål (mmol/l)"
+    }
 
-      // Hvis du senere vil tilføje aktiv insulintid:
-      /*
-      ,
-      {
-        type: "number",
-        id: "ait",
-        label: "Vælg aktiv insulintid (2–5 timer)",
-        min: 2,
-        max: 5,
-        step: 0.5
-      }
-      */
+    /* Hvis du senere vil tilføje aktiv insulintid:
+    ,
+    {
+      type: "number",
+      id: "ait",
+      label: "Vælg aktiv insulintid (2–5 timer)",
+      min: 2,
+      max: 5,
+      step: 0.5
+    }
+    */
 
-    ]
-  },
+  ]
+},
 
 
   /* =====================================================
