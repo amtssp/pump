@@ -1,10 +1,11 @@
 /* =========================================
-   BARN – Beregning + Info-tekst modul
+   BARN – Beregningsmodul
+   Skal matche generiske funktionsnavne
    ========================================= */
 
 
 /* ---------- Info-tekst ---------- */
-function getInfoTextBarn(){
+function getInfoText(){
     return `
     <div class="note">
         <strong>Info om beregninger:</strong>
@@ -16,8 +17,8 @@ function getInfoTextBarn(){
 }
 
 
-/* ---------- Beregningsfunktion ---------- */
-function calculateBarnSettings(adjusted){
+/* ---------- Beregning ---------- */
+function calculateSettings(adjusted){
 
     // adjusted = TDI reduceret med 20%
 
