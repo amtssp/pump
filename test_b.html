@@ -304,13 +304,46 @@ beregningsScript.onload = function(){
 
             let input;
 
-            if(f.type==="number"){
-                input = document.createElement("input");
-                input.type = "number";
-                input.step = f.step || "0.1";
-                if (f.min !== undefined) input.min = f.min;
-                if (f.max !== undefined) input.max = f.max;
-            }
+if(f.type==="number"){
+    input = document.createElement("input");
+    input.type = "number";
+    input.step = f.step || "0.1";
+
+    if (f.min !== undefined) input.min = f.min;
+    if (f.max !== undefined) input.max = f.max;
+
+    /* 🔒 Clamp ved change */
+    input.addEventListener("change", () => {
+        let value = parseFloat(input.value);
+        if (isNaN(value)) return;
+
+        if (f.min !== undefined && value < f.min) {
+            value = f.min;
+        }
+
+        if (f.max !== undefined && value > f.max) {
+            value = f.max;
+        }
+
+        input.value = value;
+
+        // 🎨 Opdater farve efter evt. rettelse
+        if (!input.checkValidity()) {
+            input.style.backgroundColor = "#ffd6e0";
+        } else {
+            input.style.backgroundColor = "#f4f6f8";
+        }
+    });
+
+    /* 🎨 Lyserød ved ugyldig indtastning */
+    input.addEventListener("input", () => {
+        if (!input.checkValidity()) {
+            input.style.backgroundColor = "#ffd6e0";
+        } else {
+            input.style.backgroundColor = "#f4f6f8";
+        }
+    });
+}
 
             if(f.type==="select"){
                 input = document.createElement("select");
