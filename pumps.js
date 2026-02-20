@@ -115,7 +115,7 @@ const pumps = {
       },
 
       {
-        type: "select",
+        type: "number",
         id: "target",
         label: "Vælg glukosemål (mmol/l)",
         min: 4.4,
