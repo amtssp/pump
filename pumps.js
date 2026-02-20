@@ -118,7 +118,9 @@ const pumps = {
         type: "select",
         id: "target",
         label: "Vælg glukosemål (mmol/l)",
-        options: [5.5, 6.0, 6.5],
+        min: 4.4,
+        max: 11,
+        step: 0.5,
         label_o: "Glukosemål (mmol/l)",
       }
 
