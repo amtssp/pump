@@ -116,7 +116,7 @@ window.pumps = {
     {
       type: "number",
       id: "target",
-      label: "Vælg glukosemål (mmol/l)",
+      label: "Vælg glukosemål (4,4-11 mmol/l)",
       min: 4.4,
       max: 11,
       step: 0.5,
