@@ -8,6 +8,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
+    background-color: #78ecb6;
 }
 
 .container {
@@ -66,6 +67,8 @@ button { margin-top:20px; padding:8px 14px; }
 
 <body>
 <div class="container">
+
+<h2>Insulinpumpe Opstarts Beregner</h2>
 
 <label>
 <input type="checkbox" id="pumpSwitch">
@@ -146,7 +149,7 @@ Automatisk beregnet – kan justeres
 /* =========================================
    KONFIGURATION – SKIFT KUN HER
    ========================================= */
-const beregningstype = "test";
+const beregningstype = "voksen"; // "barn" eller "voksen"
 
 /* =========================================
    Dynamisk indlæsning af beregningsfil
@@ -156,8 +159,9 @@ beregningsScript.src = beregningstype + "_beregning.js";
 
 beregningsScript.onload = function(){
 
+    // Indsæt info tekst
     const infoContainer = document.getElementById("infoContainer");
-    infoContainer.innerHTML = infoNoteHTML;
+    infoContainer.innerHTML = infoNoteHTML;  // brug info fra beregning.js
 
     const pumpSwitch = document.getElementById("pumpSwitch");
     const pumpModel = document.getElementById("pumpModel");
@@ -242,6 +246,7 @@ beregningsScript.onload = function(){
                     if(f.max!==undefined && value>f.max) value=f.max;
                     input.value = value;
 
+                    // Opdater baggrundsfarve
                     if(!input.checkValidity()) input.style.backgroundColor="#ffd6e0";
                     else input.style.backgroundColor="#f4f6f8";
                 });
@@ -297,6 +302,9 @@ beregningsScript.onload = function(){
         calculate();
     });
 
+    // ==========================
+    // Kopier til udklipsholder
+    // ==========================
     copyButton.addEventListener("click", ()=>{
         if(!pumpModel.value) return;
         const pump = pumps[pumpModel.value];
