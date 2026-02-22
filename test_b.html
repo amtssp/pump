@@ -4,7 +4,14 @@
 <meta charset="UTF-8">
 <title>Insulinpumpe Opstarts Beregner</title>
 
-<style>
+    <script>
+/* =========================================
+   KONFIGURATION – SKIFT KUN HER
+   ========================================= */
+const beregningstype = "barn"; // "barn" eller "voksen"
+</script>
+
+    <style>
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
@@ -143,10 +150,6 @@ Automatisk beregnet – kan justeres
 <script src="pumps.js"></script>
 
 <script>
-/* =========================================
-   KONFIGURATION – SKIFT KUN HER
-   ========================================= */
-const beregningstype = "barn"; // "barn" eller "voksen"
 
 /* =========================================
    Dynamisk indlæsning af beregningsfil
