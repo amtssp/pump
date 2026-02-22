@@ -15,7 +15,7 @@ document.body.style.backgroundColor = "#f4f6f8";
 const container = document.querySelector(".container");
 if (container) {
     const h2 = document.createElement("h2");
-    h2.textContent = "Insulinpumpe Opstarts Beregner - Til BØRN";
+    h2.textContent = "Insulinpumpe Opstarts Beregner - Til VOKSNE";
     container.insertBefore(h2, container.firstChild);
 }
 
