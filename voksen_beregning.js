@@ -1,9 +1,23 @@
 /* =========================================
    VOKSEN – Beregningsmodul
    Indeholder KUN:
-   1) Info-tekst
-   2) Beregning af basalRate, ISF og ICR
+   1) baggrundsfarve
+   2) Overskrift
+   3) Info-tekst
+   4) Beregning af basalRate, ISF og ICR
    ========================================= */
+
+/* ---------- NYT: Baggrundsfarve ---------- */
+document.body.style.backgroundColor = "#f4f6f8";
+
+
+/* ---------- NYT: Overskrift ---------- */
+const container = document.querySelector(".container");
+if (container) {
+    const h2 = document.createElement("h2");
+    h2.textContent = "Insulinpumpe Opstarts Beregner - Til BØRN";
+    container.insertBefore(h2, container.firstChild);
+}
 
 
 /* ---------- Info-tekst ---------- */
