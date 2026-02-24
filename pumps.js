@@ -59,6 +59,7 @@ window.pumps = {
         type: "checkbox",
         id: "sport",
         label: "Midlertidig glukosemål (8.3 mmol/l i 24 timer)"
+        label_o: "Midlertidig glukosemål aktiv (8.3 mmol/l)"
       },
         
       {
