@@ -41,7 +41,7 @@ window.pumps = {
         type: "select",
         id: "target",
         label: "Vælg glukosemål (mmol/l)",
-        options: [5.5, 6.1, 6.5],
+        options: [5.5, 6.1, 6.7],
         label_o: "Glukosemål (mmol/l)",
       },
 
@@ -54,7 +54,13 @@ window.pumps = {
         step: 0.5,
         label_o: "Aktiv insulintid (timer)",
       },
-
+        
+      {
+        type: "checkbox",
+        id: "sport",
+        label: "Midlertidig glukosemål (8.3 mmol/l i 24 timer)"
+      },
+        
       {
         type: "checkbox",
         id: "auto",
