@@ -184,7 +184,7 @@ window.pumps = {
       {
         type: "number",
         id: "minGlucose",
-        label: "Vælg minimum glukose for beregning (2,8-3,9 mmol/l)",
+        label: "Minimum glukose for beregning (2,8-3,9 mmol/l) (ofte 2.8)",
         min: 2.8,
         max: 3.9,
         step: 0.1,
