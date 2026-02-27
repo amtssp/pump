@@ -181,7 +181,7 @@ window.pumps = {
       {
         type: "number",
         id: "minGlucose",
-        label: "Vælg minimum blodsukker for beregning (mmol/l)",
+        label: "Vælg minimum blodsukker for beregning (2,8-3,9 mmol/l)",
         min: 2.8,
         max: 3.9,
         step: 0.1,
