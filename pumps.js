@@ -161,13 +161,16 @@ window.pumps = {
         options: [6.1, 6.7, 7.3, 7.8, 8.3],
         label_o: "Glukosemål (mmol/l)",
       },
-
-      {
-        type: "checkbox",
-        id: "reverse",
-        label: "Omvendt korrektion aktiv"
+ 
+        {
+        type: "number",
+        id: "korr_over",
+        label: "Korriger over (mmol/l) (Ofte = Glukosemål)",
+        step: 0.1,
+        label_o: "Korriger over (mmol/l)",
       },
         
+
       {
         type: "number",
         id: "ait",
@@ -189,13 +192,11 @@ window.pumps = {
       },
         
       {
-        type: "number",
-        id: "korr_over",
-        label: "Korriger over (mmol/l) (Ofte = Glukosemål)",
-        step: 0.1,
-        label_o: "Korriger over (mmol/l)",
+        type: "checkbox",
+        id: "reverse",
+        label: "Omvendt korrektion aktiv"
       }
-        
+            
     ]
   }
 
