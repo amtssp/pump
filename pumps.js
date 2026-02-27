@@ -34,7 +34,7 @@ window.pumps = {
   ===================================================== */
   medtronic780g: {
     name: "Medtronic 780G",
-
+    advice: "For mest aggressiv pumpeindstilling vælges: tekst er under udarbejdelse.",
     fields: [
 
       {
