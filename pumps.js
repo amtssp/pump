@@ -77,7 +77,7 @@ window.pumps = {
   ===================================================== */
   tandem: {
     name: "Tandem Control-IQ",
-
+    advice: "For mest aggressiv pumpeindstilling vælges: tekst er under udarbejdelse.",
     fields: [
 
       {
@@ -103,7 +103,7 @@ window.pumps = {
   ===================================================== */
   ypso: {
   name: "YpsoPump",
-
+    advice: "For mest aggressiv pumpeindstilling vælges: tekst er under udarbejdelse.",
   fields: [
 
     {
@@ -151,7 +151,7 @@ window.pumps = {
   ===================================================== */
   omnipod5: {
     name: "Omnipod 5",
-
+    advice: "For aggressiv pumpeindstilling (max TIR): tekst er under udarbejdelse og nu er det for at checke linje ombrydning jeg ved ikke hvor langt jeg skal blive ved, men det må snart være nok. ............ Vi får se..........tak.",
     fields: [
 
       {
