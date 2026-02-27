@@ -182,10 +182,20 @@ window.pumps = {
         type: "number",
         id: "minGlucose",
         label: "Vælg minimum blodsukker for beregning (Ofte det samme som glukosemål)",
+        min: 2.8,
+        max: 3.9,
         step: 0.1,
         label_o: "Minimum blodsukker for beregning",
+      },
+        
+      {
+        type: "number",
+        id: "korr_over",
+        label: "Korriger over (Ofte det samme som glukosemål)",
+        step: 0.1,
+        label_o: "Korriger over (mmmol/l)",
       }
-
+        
     ]
   }
 
