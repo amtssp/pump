@@ -191,9 +191,9 @@ window.pumps = {
       {
         type: "number",
         id: "korr_over",
-        label: "Korriger over (mmmol/l) (Ofte = Glukosemål)",
+        label: "Korriger over (mmol/l) (Ofte = Glukosemål)",
         step: 0.1,
-        label_o: "Korriger over (mmmol/l)",
+        label_o: "Korriger over (mmol/l)",
       }
         
     ]
