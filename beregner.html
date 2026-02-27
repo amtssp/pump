@@ -94,7 +94,8 @@ Ved høj HbA1c kan langsommere korrektion være gavnlig. Overvej justering af in
 </div>
 
 <h3 id="pumpTitle">Pumpespecifikke indstillinger</h3>
-
+<div id="pumpAdvice" class="note" style="margin-top:6px;"></div>
+    
 <div class="result-grid">
 <div class="result-values">
 
@@ -291,12 +292,25 @@ beregningsScript.onload = function(){
     pumpSwitch.addEventListener("change",calculate);
     tdiInput.addEventListener("input",calculate);
 
-    pumpModel.addEventListener("change", ()=>{
-        const selectedPump=pumpModel.value;
-        pumpTitle.textContent = selectedPump ? pumps[selectedPump].name : "Pumpespecifikke indstillinger";
-        copyButton.disabled = !selectedPump;
-        renderPumpFields();
-        calculate();
+const pumpAdvice = document.getElementById("pumpAdvice");
+
+pumpModel.addEventListener("change", ()=>{
+    const selectedPump = pumpModel.value;
+
+    if(selectedPump){
+        const pump = pumps[selectedPump];
+        pumpTitle.textContent = pump.name;
+
+        // Vis rådgivning
+        pumpAdvice.textContent = pump.advice || "";
+    } else {
+        pumpTitle.textContent = "Pumpespecifikke indstillinger";
+        pumpAdvice.textContent = "";
+    }
+
+    copyButton.disabled = !selectedPump;
+    renderPumpFields();
+    calculate();
     });
 
     // ==========================
