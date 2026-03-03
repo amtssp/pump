@@ -43,11 +43,24 @@ const kurser = [
         link: "https://www.auh.dk/afdelinger/steno-diabetes-center-aarhus-klinik/voksne-med-diabetes/workshop-klogere-pa-kulhydrater/"
     },
     {
+        navn: "Tanker om mad, krop og vægt (forstyrret spisning) - unge",
+        kortNavn: "Mad og krop - de unge",
+        beskrivelse: "De fleste unge forholder sig ofte til deres krop, vægt og udseende. Det er helt normalt. Men når du har Type 1 diabetes, er du nødt til hver dag at forholde dig til mad og fysisk aktivitet på en måde, som andre uden diabetes ikke behøver",
+        link: "https://diabetes.rm.dk/dine-muligheder/mad-krop-og-vaegt/tanker-om-mad-krop-og-vagt-fylder/"
+    },
+      {
+        navn: "Hjælp dit barn til et godt forhold til mad og krop",
+        kortNavn: "Mad og krop - forældre",
+        beskrivelse: "Er du forælder til et barn med type 1-diabetes? Her er gode råd om hvordan du kan støtte dit barn til et godt forhold til mad og krop i en hverdag med diabetes.",
+        link: "https://diabetes.rm.dk/dine-muligheder/mad-krop-og-vaegt/hjaelp-dit-barn//"
+    },
+    {
         navn: "Tilbud om diætistsamtaler",
         kortNavn: "Diætistsamtaler",
         beskrivelse: "Maden spiller en vigtig rolle i behandling af diabetes. Læs her, hvad en diætist kan hjælpe med, når blodsukker, måltider og insulin skal i balance.",
         link: "https://www.auh.dk/afdelinger/steno-diabetes-center-aarhus-klinik/voksne-med-diabetes/diaetist-samtaler/"
     },
+    
     {
         navn: "Info om årssamtalen",
         kortNavn: "Info om årssamtalen",
