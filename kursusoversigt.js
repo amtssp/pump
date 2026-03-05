@@ -60,7 +60,12 @@ const kurser = [
         beskrivelse: "Maden spiller en vigtig rolle i behandling af diabetes. Læs her, hvad en diætist kan hjælpe med, når blodsukker, måltider og insulin skal i balance.",
         link: "https://www.auh.dk/afdelinger/steno-diabetes-center-aarhus-klinik/voksne-med-diabetes/diaetist-samtaler/"
     },
-    
+     {
+        navn: "Læs om dine rettigheder og diabetes",
+        kortNavn: "Rettigheder",
+        beskrivelse: "Har du eller dit barn fået diabetes? Her kan du få overblik over regler og rettigheder, som mange i din situation får brug for at kende.",
+        link: "https://diabetes.rm.dk/dine-muligheder/rettigheder/"
+    },   
     {
         navn: "Info om årssamtalen",
         kortNavn: "Info om årssamtalen",
