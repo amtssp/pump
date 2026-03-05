@@ -34,7 +34,7 @@ window.pumps = {
   ===================================================== */
   medtronic780g: {
     name: "Medtronic 780G",
-    advice: "For mest aggressiv pumpeindstilling vælges: tekst er under udarbejdelse.",
+    advice: "Den mest aggressive pumpeindstilling er: Aktiv insulintid=2 og Glukosemål=5.5 mmol/l.",
     fields: [
 
       {
@@ -77,7 +77,7 @@ window.pumps = {
   ===================================================== */
   tandem: {
     name: "Tandem Control-IQ",
-    advice: "For mest aggressiv pumpeindstilling vælges: tekst er under udarbejdelse.",
+    advice: "Den mest aggressive pumpeindstilling er: For IFS benyt 90-regel, For kulhydratratio benyt 450-regel.",
     fields: [
 
       {
@@ -103,7 +103,7 @@ window.pumps = {
   ===================================================== */
   ypso: {
   name: "YpsoPump",
-    advice: "For mest aggressiv pumpeindstilling vælges: tekst er under udarbejdelse.",
+    advice: "Den mest aggressive pumpeindstilling er: Glukosemål=5.8 mmol/l.",
   fields: [
 
     {
@@ -151,7 +151,7 @@ window.pumps = {
   ===================================================== */
   omnipod5: {
     name: "Omnipod 5",
-    advice: "For aggressiv pumpeindstilling (max TIR): tekst er under udarbejdelse og nu er det for at checke linje ombrydning jeg ved ikke hvor langt jeg skal blive ved, men det må snart være nok. ............ Vi får se..........tak.",
+    advice: "Den mest aggressive pumpeindstilling er: For IFS benyt 85-regel, For kulhydratratio benyt 350-regel. Glukosemål=6.1 mmol/l og omvendt korrektion=fra.",
     fields: [
 
       {
