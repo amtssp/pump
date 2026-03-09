@@ -103,7 +103,7 @@ window.pumps = {
   ===================================================== */
   ypso: {
   name: "YpsoPump",
-    advice: "Den mest aggressive pumpeindstilling er: Glukosemål=5.8 mmol/l.",
+    advice: "Den mest aggressive pumpeindstilling er: Glukosemål= 4.4mmol/l (dog ikke lavere end 5.8 mmol/l ved opstart.",
   fields: [
 
     {
@@ -151,7 +151,7 @@ window.pumps = {
   ===================================================== */
   omnipod5: {
     name: "Omnipod 5",
-    advice: "Den mest aggressive pumpeindstilling er: For IFS benyt 85-regel, For kulhydratratio benyt 350-regel. Glukosemål=6.1 mmol/l og omvendt korrektion=fra.",
+    advice: "Den mest aggressive pumpeindstilling er: For Insulinfølsomhed benyt 85-regel, For kulhydratratio benyt 350-regel. Glukosemål=6.1 mmol/l og omvendt korrektion=fra.",
     fields: [
 
       {
