@@ -103,7 +103,7 @@ window.pumps = {
   ===================================================== */
   ypso: {
   name: "YpsoPump",
-    advice: "Den mest aggressive pumpeindstilling er: Glukosemål= 4.4mmol/l (dog ikke lavere end 5.8 mmol/l ved opstart.",
+    advice: "Den mest aggressive pumpeindstilling er: Glukosemål = 4.4 mmol/l (dog ikke lavere end 5.8 mmol/l ved opstart).",
   fields: [
 
     {
