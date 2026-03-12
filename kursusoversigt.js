@@ -65,10 +65,16 @@ const kurser = [
         kortNavn: "Rettigheder",
         beskrivelse: "Har du eller dit barn fået diabetes? Her kan du få overblik over regler og rettigheder, som mange i din situation får brug for at kende.",
         link: "https://diabetes.rm.dk/dine-muligheder/rettigheder/"
-    },   
-    {
-        navn: "Info om årssamtalen",
+    },
+         {
+        navn: "Informationer om årssamtalen",
         kortNavn: "Info om årssamtalen",
+        beskrivelse: "Én gang om året - i forbindelse med din årssamtale - bliver du screenet for følgesygdomme til diabetes. Læs mere om det her.",
+        link: "https://www.auh.dk/patientvejledninger/steno-diabetes-center-aarhus/diabetes-og-arsstatus/arssamtale-og-screening-for-folgesygdomme-sammedagsscreening/"
+    }, 
+    {
+        navn: "Videoer på forskellige sprog om årssamtalen",
+        kortNavn: "Videoer om årssamtalen",
         beskrivelse: "Hvad skal der ske ved årssamtalen? Videoerne på engelsk, somali og dansk fortæller, hvad der skal ske ved samtalen, og hvordan du forbereder dig.",
         link: "https://www.auh.dk/afdelinger/steno-diabetes-center-aarhus-klinik/voksne-med-diabetes/aarsamtale-videoer-engelsk-somali-dansk/"
     }
