@@ -162,7 +162,7 @@ function kopierValgte() {
     kurser.forEach((kursus, index) => {
         const checkbox = document.getElementById(`kursus_${index}`);
         if (checkbox.checked) {
-            tekst += `• ${kursus.kortNavn}\n${kursus.link}\n\n`;
+            tekst += `- ${kursus.kortNavn}\n${kursus.link}\n\n`;
         }
     });
 
