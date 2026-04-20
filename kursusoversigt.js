@@ -77,5 +77,11 @@ const kurser = [
         kortNavn: "Videoer om årssamtalen",
         beskrivelse: "Hvad skal der ske ved årssamtalen? Videoerne på engelsk, somali og dansk fortæller, hvad der skal ske ved samtalen, og hvordan du forbereder dig.",
         link: "https://www.auh.dk/afdelinger/steno-diabetes-center-aarhus-klinik/voksne-med-diabetes/aarsamtale-videoer-engelsk-somali-dansk/"
+    },
+        {
+        navn: "Samtykke om deling af sensordata i INDBLIK",
+        kortNavn: "Samtykke til sensordata i INDBLIK",
+        beskrivelse: "Her kan du give samtykke til videregivelse af dine sensordata fra Abbott til Region Midtjylland.",
+        link: "https://diabetes.rm.dk/behandling/samtykke-indblik/"
     }
 ];
